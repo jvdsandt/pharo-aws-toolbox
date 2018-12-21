@@ -1,5 +1,8 @@
+# Pharo AWS Toolbox
 
-# Pharo Lambda Runtime
+[![Build Status](https://travis-ci.org/jvdsandt/pharo-aws-toolbox.svg?branch=master)](https://travis-ci.org/jvdsandt/pharo-aws-toolbox)
+
+## Pharo Lambda Runtime
 
 Support library for developing AWS Lambda functions using Pharo Smalltalk.
 
@@ -10,12 +13,11 @@ A public layer containing the Pharo Smalltalk VM is available. See [layer-setup]
 
 Prepare image
 
-NoChangesLog install.
-NoPharoFilesOpener install.
-
+```smalltalk
 SessionManager default
 	unregisterClassNamed: #LGitLibrary;
 	unregisterClassNamed: #OmSessionStore;
 	unregisterClassNamed: #OmDeferrer;
 	unregisterClassNamed: #OmStoreFactory;
 	unregisterClassNamed: #SourceFileArray
+```
