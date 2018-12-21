@@ -21,7 +21,9 @@ AWSSignerV4RequestParameters class >> getRegionNameFromHost: aString [
 			part := aString copyFrom: 1 to: aString size - 14.
 			index := part lastIndexOf: $..
 			index > 0
-				ifTrue: [ ^ (part allButFirst: index) asLowercase ] ].
+				ifTrue: [ ^ (part allButFirst: index) asLowercase ].
+			(part beginsWith: 's3-')	
+				ifTrue: [ ^(part allButFirst: 3) asLowercase ] ].
 			
 	self error: 'Cannot get region name from host name'
 	

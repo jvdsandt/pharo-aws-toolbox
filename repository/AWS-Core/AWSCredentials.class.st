@@ -1,3 +1,6 @@
+"
+I am an immutable data object for storing AWS credentials.
+"
 Class {
 	#name : #AWSCredentials,
 	#superclass : #Object,
@@ -23,6 +26,7 @@ AWSCredentials class >> accessKeyId: aKeyId secretKey: aSecretKey sessionToken: 
 
 { #category : #accessing }
 AWSCredentials class >> default [
+	"Try to get the accessKeyId ans secretKey from the default profile in the standard AWS config files."
 
 	^ AWSSignerUtils getCredentialsFromProfile: 'default' ifAbsent: [ nil ]
 ]

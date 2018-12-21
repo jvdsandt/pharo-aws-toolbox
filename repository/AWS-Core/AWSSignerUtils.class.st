@@ -21,11 +21,12 @@ AWSSignerUtils class >> getCredentialsFromEnvironment [
 	
 	sessionToken := OSEnvironment current getEnv: 'AWS_SESSION_TOKEN'.
 	
-	^ AWSCredentials accessKeyId: accessKeyId secretKey: secretKey
+	^ AWSCredentials accessKeyId: accessKeyId secretKey: secretKey sessionToken: sessionToken
 ]
 
 { #category : #utilities }
 AWSSignerUtils class >> getCredentialsFromProfile: profileName ifAbsent: aBlock [
+	"Try to get the accessKeyId ans secretKey from the specified profile in the standard AWS config file '~/.aws/credentials'"
 	"self getCredentialsFromProfile: 'default' ifAbsent: [ nil ]"
 	
 	| ref contents index propIndex accessKeyId secretKey |

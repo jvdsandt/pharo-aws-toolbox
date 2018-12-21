@@ -7,7 +7,7 @@ Class {
 { #category : #constants }
 AWSHeaders class >> x_amz_content_sha256 [
 
-	^ 'x_amz_content_sha256'
+	^ 'x-amz-content-sha256'
 ]
 
 { #category : #constants }

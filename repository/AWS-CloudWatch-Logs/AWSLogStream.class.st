@@ -1,3 +1,8 @@
+"
+Use me to log events to an AWS Logs Stream. The easy way to create me is via AWSLogs>>#getStream:group: If the specified LogGroup doesn't exist yet I will try to create it. If the specified LogStream doesn't exists yet I will also try to create it.
+
+Use the #addEvent: method to log something. Note that the logged events are NOT send to AWS directly but stored in an instance variable. Use the #flush method to send the events to AWS.
+"
 Class {
 	#name : #AWSLogStream,
 	#superclass : #Object,

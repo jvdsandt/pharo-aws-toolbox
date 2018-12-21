@@ -1,3 +1,6 @@
+"
+I implement the AWS Signature Version 4 logic that is used for authenticating requests to AWS.
+"
 Class {
 	#name : #AWSSignerV4,
 	#superclass : #Object,
@@ -165,7 +168,7 @@ AWSSignerV4 >> hashFunction [
 { #category : #utilities }
 AWSSignerV4 >> hashString: aString [
 
-	^ SHA256 new hashMessage: (self utf8encoder encodeString: aString)
+	^ self hashFunction new hashMessage: (self utf8encoder encodeString: aString)
 ]
 
 { #category : #utilities }
@@ -224,7 +227,7 @@ AWSSignerV4 >> sign: aRequest using: awsCredentials with: signerParams [
 { #category : #resources }
 AWSSignerV4 >> signingAlgorithm [
 
-	^ 'AWS4-HMAC-SHA256'
+	^ self class signingAlgorithm
 ]
 
 { #category : #resources }
