@@ -2,22 +2,36 @@
 
 [![Build Status](https://travis-ci.org/jvdsandt/pharo-aws-toolbox.svg?branch=master)](https://travis-ci.org/jvdsandt/pharo-aws-toolbox)
 
+This project contains packages to interact with various Amazon Web Services. Currently the following functionality is provided:
+
+- Build Lambda functions using Pharo Smalltalk
+- Writing log events to the CloudWatch Logs service
+
 ## Pharo Lambda Runtime
 
-Support library for developing AWS Lambda functions using Pharo Smalltalk.
+With [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) you can run code in the cloud without 
+setting up any kind of server. AWS Lamda has build in support for some common programming languages but also supports
+custom runtimes. With the Pharo Lambda runtime you can implement Lambda functions in Pharo Smalltalk. It consists of a
+layer with the Smalltalk VM and a small support library for communicating with the Lambda Runtime API.
 
-### Using the Pharo Smalltalk VM for running AWS Lambda Functions
+Pharo Smalltalk is a pretty efficient environment to implement Lambda functions. Functions implemented in Smalltalk 
+normally don't need more than 256MB of memory to execute. This means that you can execute a million function 
+calls for [free](https://aws.amazon.com/lambda/pricing/) each month.
 
-A public layer containing the Pharo Smalltalk VM is available. See [layer-setup](doc/layer-setup.md) for details.
+For more details see [Pharo Lambda Runtime](doc/pharo-lambda-runtime.md).
 
+## Installation
 
-Prepare image
+You can load the Pharo AWS Toolbox using Metacello:
 
-```smalltalk
-SessionManager default
-	unregisterClassNamed: #LGitLibrary;
-	unregisterClassNamed: #OmSessionStore;
-	unregisterClassNamed: #OmDeferrer;
-	unregisterClassNamed: #OmStoreFactory;
-	unregisterClassNamed: #SourceFileArray
+```Smalltalk
+Metacello new
+  repository: 'github://jvdsandt/pharo-aws-toolbox/repository';
+  baseline: 'AWSToolbox';
+  load.
 ```
+
+#### Dependencies
+
+Pharo AWS Toolbox has the following dependencies:
+- [NeoJSON](https://github.com/svenvc/NeoJSON) - Used for reading and writing JSON data.
