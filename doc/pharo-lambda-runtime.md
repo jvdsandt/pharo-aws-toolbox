@@ -8,7 +8,7 @@ To implement a Lambda function in Smalltalk you need the following:
 - A file named bootstrap that the Lambda runtime will execute
 - A Smalltalk library to access the AWS logging service (CloudWatch Logs) so your function can log information.
 
-This project provides everything you need, including some [sample functions](pharo-lambda-demo).
+This project provides everything you need, including some [sample functions](pharo-lambda-demo.md).
 AWS Lambda offers a lot of options how to trigger a Lambda Function and what other services you 
 can access from your function. The sample function uses the AWS API Gateway to implement
 a REST service.
@@ -26,7 +26,7 @@ Currently the following public layers is available:
 | --- | --- | --- | --- |
 | 2018-12-07 | Pharo61-runtime | arn:aws:lambda:eu-west-1:544477632270:layer:Pharo61-runtime:3 | Standard Pharo stable VM (5.0-201806281256) |
 
-This VM works with Pharo 6.1 and 7.0 64 bits images. The layer is a zip file with the Pharo Smalltalk packaded
+This VM works with Pharo 6.1 and 7.0 64 bits images. The layer is a zip file with the Pharo Smalltalk packaged
 in a bin directory. The Lambda runtime will unpack this layer in the /opt directory. The /opt/bin directory
 is part of the system path so a bootstrap file could look like this.
 
@@ -83,5 +83,5 @@ suited runtime image for AWS Lambda.
 
 #### Demo
 
-See the [Pharo Lambda Demo](pharo-lambda-demo) for a sample application that implements a REST API using the 
+See the [Pharo Lambda Demo](pharo-lambda-demo.md) for a sample application that implements a REST API using the 
 AWS API Gateway and Lambda functions written in Pharo Smalltalk.

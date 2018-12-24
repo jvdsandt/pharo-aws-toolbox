@@ -51,3 +51,43 @@ showAbout: apiRequest
 			at: #systemInfo put: self systemInfoDictionary;
 			yourself
 ```
+
+### AWS Lambda demo setup
+
+##### Step 1: Prepare a Smalltalk image
+Load the AWS-Lamba-Runtime package which includes the demo code. Prepare the image for the Lambda runtime
+environment by disabling any functionality that tries to create or write to existing files.
+
+##### Step 2: Create a zip file with the Smalltalk image and a bootstrap file
+Create a file called bootstrap which starts you image, for example:
+```
+#!/bin/sh
+pharo --nodisplay aws-toolbox-pharo70.image --no-default-preferences aws-lambda
+```
+Create a zip file with the your image, the bootstrap file and any other file that your code needs.
+
+##### Step 4: Define the Lambda function using the AWS Console
+
+Use the Create function / Author from scratch operation in the AWS Console.
+- Select "Use custom runtime in function code or layer" as the Runtime
+- Add the API Gateway as the trigger for your function
+- Add the Smalltalk VM layer. The layer version ARN for this layer is arn:aws:lambda:eu-west-1:544477632270:layer:Pharo61-runtime:3
+- Upload your zip file as the Function package and set the HAndler to AWSLambdaAPIGatewayDemoHandler
+
+![Function configuration](pharo-lambda-demo/lambda-function-def.png)
+
+##### Step 5: Test your Lambda function
+
+Using the Test button you can execute your function. A valid event you can use for this:
+```json
+{
+  "resource": "/classes/{className}/methods",
+  "httpMethod": "GET",
+  "pathParameters": {
+    "className": "Array"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
+```
+
