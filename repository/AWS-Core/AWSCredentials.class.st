@@ -28,7 +28,7 @@ AWSCredentials class >> accessKeyId: aKeyId secretKey: aSecretKey sessionToken: 
 AWSCredentials class >> default [
 	"Try to get the accessKeyId ans secretKey from the default profile in the standard AWS config files."
 
-	^ AWSSignerUtils getCredentialsFromProfile: 'default' ifAbsent: [ nil ]
+	^ AWSEnvironment defaultCredentials
 ]
 
 { #category : #comparing }
@@ -51,6 +51,12 @@ AWSCredentials >> accessKeyId [
 AWSCredentials >> hash [
 
 	^ accessKeyId hash bitXor: secretKey hash
+]
+
+{ #category : #printing }
+AWSCredentials >> printOn: stream [
+	super printOn: stream.
+	stream nextPut: $(; print: self accessKeyId; nextPut: $)	
 ]
 
 { #category : #accessing }

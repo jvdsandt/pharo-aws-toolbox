@@ -31,6 +31,23 @@ AWSError class >> subclassForErrorType: aString [
 		
 ]
 
+{ #category : #'instance creation' }
+AWSError class >> xmlData: rootElement [
+
+	| data msg |
+	
+	self assert: rootElement name = 'Error'.
+	data := Dictionary new.
+	rootElement elementsDo: [ :each |
+		data at: each name put: each contentString ].
+	
+	msg := (data at:'Code' ifAbsent: [ '' ]), ' - ', (data at: 'Message' ifAbsent: [ '' ]).
+
+	^ self new
+			data: data;
+			signal: msg
+]
+
 { #category : #accessing }
 AWSError >> data [
 	^ data

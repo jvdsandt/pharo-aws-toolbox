@@ -13,6 +13,27 @@ AWSSignerV4 class >> signingAlgorithm [
 	^ 'AWS4-HMAC-SHA256'
 ]
 
+{ #category : #utilities }
+AWSSignerV4 class >> stringAsCompactString: aString [
+	"Remove excess white space before and after values, and converts sequential spaces to a single space."
+
+	| stream spaceOk |
+	
+	stream := WriteStream on: (String new: aString size).
+	spaceOk := false.
+	aString do: [ :eachChar |
+		eachChar = Character space
+			ifTrue: [ 
+				spaceOk 
+					ifTrue: [ stream nextPut: Character space ].
+				spaceOk := false ]
+			ifFalse: [ 
+				stream nextPut: eachChar.
+				spaceOk := true ] ].
+		
+	^ stream contents trimRight 
+]
+
 { #category : #internal }
 AWSSignerV4 >> buildAuthorizationHeader: aRequest signature: signature credentials: awsCredentials with: signerParams [
 
@@ -89,9 +110,9 @@ AWSSignerV4 >> getCanonicalizedHeaderString: aHeaders [
 	^ String streamContents: [ :s |
 			names sorted do: [ :eachName |
 				s
-					nextPutAll: (AWSSignerUtils stringAsCompactString: eachName);
+					nextPutAll: (self class stringAsCompactString: eachName);
 					nextPut: $:;
-					nextPutAll: (AWSSignerUtils stringAsCompactString: (values at: eachName));
+					nextPutAll: (self class stringAsCompactString: (values at: eachName));
 					lf ] ]
 ]
 

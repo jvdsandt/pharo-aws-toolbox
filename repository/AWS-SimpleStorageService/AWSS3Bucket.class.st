@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'instance creation' }
+AWSS3Bucket class >> newWithBucket: bucketName [
+
+	^ self newWithCredentials: AWSEnvironment defaultCredentials 
+			region: AWSEnvironment defaultRegionName
+			bucket: bucketName
+]
+
+{ #category : #'instance creation' }
 AWSS3Bucket class >> newWithCredentials: aCredentials region: aRegion bucket: bucketName [
 
 	^ self basicNew initWithCredentials: aCredentials region: aRegion bucket: bucketName
@@ -16,6 +24,22 @@ AWSS3Bucket class >> newWithCredentials: aCredentials region: aRegion host: host
 	^ self basicNew initWithCredentials: aCredentials region: aRegion host: hostname
 ]
 
+{ #category : #internal }
+AWSS3Bucket >> executeRequest: httpRequest [
+
+	| response |
+	
+	self signRequest: httpRequest.
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ response
+]
+
 { #category : #operations }
 AWSS3Bucket >> get: aKey [
 
@@ -24,16 +48,8 @@ AWSS3Bucket >> get: aKey [
 	url := self endpoint asZnUrl / aKey.
 
 	httpRequest := ZnRequest get: url.
-	self signRequest: httpRequest.
+	response := self executeRequest: httpRequest.
 	
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-		
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
-		
 	^ response
 ]
 
@@ -45,15 +61,7 @@ AWSS3Bucket >> head: aKey [
 	url := self endpoint asZnUrl / aKey.
 
 	httpRequest := ZnRequest head: url.
-	self signRequest: httpRequest.
-	
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-		
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
+	response := self executeRequest: httpRequest.
 		
 	^ response
 ]
@@ -63,11 +71,11 @@ AWSS3Bucket >> initWithCredentials: aCredentials region: aRegion bucket: bucketN
 
 	self initWithCredentials: aCredentials 
 		region: aRegion
-		host: 'https://', bucketName , '.s3-', aRegion asLowercase, '.amazonaws.com'
+		endpoint: 'https://s3-', aRegion asLowercase, '.amazonaws.com/', bucketName
 ]
 
 { #category : #initialization }
-AWSS3Bucket >> initWithCredentials: aCredentials region: aRegion host: hostname [
+AWSS3Bucket >> initWithCredentials: aCredentials region: aRegion endpoint: hostname [
 
 	self initWithCredentials: aCredentials region: aRegion.
 	endpoint := hostname
@@ -82,15 +90,7 @@ AWSS3Bucket >> listObjects [
 	url queryAt: 'list-type' put: 2.
 
 	httpRequest := ZnRequest get: url.
-	self signRequest: httpRequest.
-	
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-		
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
+	response := self executeRequest: httpRequest.
 		
 	^ AWSS3ListBucketsResult fromXmlString: response contents
 
@@ -99,24 +99,27 @@ AWSS3Bucket >> listObjects [
 { #category : #operations }
 AWSS3Bucket >> put: anEntity key: aKey [
 
-	| md5hash url httpRequest response |
-	
-	md5hash := MD5 new hashMessage: anEntity asByteArray. 
+	^ self put: anEntity key: aKey headers: nil
+]
+
+{ #category : #operations }
+AWSS3Bucket >> put: anEntity key: aKey headers: aHeaders [
+
+	| url httpRequest response md5hash eTag |
 	
 	url := self endpoint asZnUrl / aKey.
+	md5hash := MD5 new hashMessage: anEntity asByteArray. 
 
 	httpRequest := ZnRequest put: url.
 	httpRequest entity: anEntity.
-	httpRequest headers at: 'Content-MD5' put: md5hash hex.
-	self signRequest: httpRequest.
+	aHeaders notNil
+		ifTrue: [ httpRequest headers addAll: aHeaders ].
+	httpRequest headers at: 'Content-MD5' put: (ZnUtils encodeBase64: md5hash).
+	response := self executeRequest: httpRequest.
+		
+	eTag := response headers at: 'ETag'.
+	(md5hash hex match: eTag withoutQuoting)
+		ifFalse: [ AWSError signal: 'Data error - hash mismatch' ].
 	
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-		
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
-		
 	^ response
 ]

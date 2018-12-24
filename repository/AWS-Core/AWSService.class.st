@@ -16,8 +16,8 @@ Class {
 { #category : #'instance creation' }
 AWSService class >> new [
 
-	^ self newWithCredentials: AWSCredentials default 
-			region: (AWSSignerUtils getRegionNameFromProfile: 'default' ifAbsent: [ self error: 'AWS: No default region' ])
+	^ self newWithCredentials: AWSEnvironment defaultCredentials  
+			region: AWSEnvironment defaultRegionName
 ]
 
 { #category : #'instance creation' }
