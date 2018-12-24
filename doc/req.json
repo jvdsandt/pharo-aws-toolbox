@@ -1,0 +1,9 @@
+{
+  "resource": "/classes/{className}",
+  "httpMethod": "GET",
+  "pathParameters": {
+    "className": "Array"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
