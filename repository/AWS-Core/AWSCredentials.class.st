@@ -1,4 +1,4 @@
-dd"
+"
 I am an immutable data object for storing AWS credentials.
 "
 Class {
