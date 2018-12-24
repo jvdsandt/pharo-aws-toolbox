@@ -1,11 +1,29 @@
 Class {
-	#name : #AWSSignerUtils,
+	#name : #AWSEnvironment,
 	#superclass : #Object,
-	#category : #'AWS-Core-Auth'
+	#category : #'AWS-Core'
 }
 
+{ #category : #accessing }
+AWSEnvironment class >> defaultCredentials [
+	"self defaultCredentials"
+
+	^ self getCredentialsFromEnvironment 
+			ifNil: [ self getCredentialsFromProfile: 'default' 
+				ifAbsent: [ self error: '' ] ]
+]
+
+{ #category : #accessing }
+AWSEnvironment class >> defaultRegionName [
+	"self defaultRegionName"
+
+	^ self getRegionNameFromEnvironment 
+			ifNil: [ self getRegionNameFromProfile: 'default' 
+				ifAbsent: [ self error: '' ] ]
+]
+
 { #category : #utilities }
-AWSSignerUtils class >> getCredentialsFromEnvironment [
+AWSEnvironment class >> getCredentialsFromEnvironment [
 	"Try to get AWS Credentials from OS environment variables. Answer nil if these
 	variables are not defined."
 
@@ -25,8 +43,10 @@ AWSSignerUtils class >> getCredentialsFromEnvironment [
 ]
 
 { #category : #utilities }
-AWSSignerUtils class >> getCredentialsFromProfile: profileName ifAbsent: aBlock [
-	"Try to get the accessKeyId ans secretKey from the specified profile in the standard AWS config file '~/.aws/credentials'"
+AWSEnvironment class >> getCredentialsFromProfile: profileName ifAbsent: aBlock [
+	"Try to get the accessKeyId ans secretKey from the specified profile
+	 in the standard AWS config file '~/.aws/credentials'"
+	
 	"self getCredentialsFromProfile: 'default' ifAbsent: [ nil ]"
 	
 	| ref contents index propIndex accessKeyId secretKey |
@@ -53,7 +73,15 @@ AWSSignerUtils class >> getCredentialsFromProfile: profileName ifAbsent: aBlock 
 ]
 
 { #category : #utilities }
-AWSSignerUtils class >> getRegionNameFromProfile: profileName ifAbsent: aBlock [
+AWSEnvironment class >> getRegionNameFromEnvironment [
+	"Try to get AWS Region from a OS environment variable. Answer nil if the
+	variable is not defined."
+	
+	^ OSEnvironment current getEnv: 'AWS_DEFAULT_REGION'
+]
+
+{ #category : #utilities }
+AWSEnvironment class >> getRegionNameFromProfile: profileName ifAbsent: aBlock [
 	"self getRegionNameFromProfile: 'default' ifAbsent: [ nil ]"
 	
 	| ref contents index propIndex regionName |
@@ -71,25 +99,4 @@ AWSSignerUtils class >> getRegionNameFromProfile: profileName ifAbsent: aBlock [
 		nextLine.
 		
 	^ regionName trimmed
-]
-
-{ #category : #utilities }
-AWSSignerUtils class >> stringAsCompactString: aString [
-	"Remove excess white space before and after values, and converts sequential spaces to a single space."
-
-	| stream spaceOk |
-	
-	stream := WriteStream on: (String new: aString size).
-	spaceOk := false.
-	aString do: [ :eachChar |
-		eachChar = Character space
-			ifTrue: [ 
-				spaceOk 
-					ifTrue: [ stream nextPut: Character space ].
-				spaceOk := false ]
-			ifFalse: [ 
-				stream nextPut: eachChar.
-				spaceOk := true ] ].
-		
-	^ stream contents trimRight 
 ]

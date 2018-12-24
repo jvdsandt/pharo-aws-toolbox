@@ -1,3 +1,6 @@
+"
+A collection a class methods with often used http headers for AWS.
+"
 Class {
 	#name : #AWSHeaders,
 	#superclass : #Object,
