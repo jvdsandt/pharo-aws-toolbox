@@ -20,7 +20,7 @@ best to use a VM with the Timer Heartbeat. It's possible to include the VM with 
 this is not very efficient. A better solution is to package the VM as a reusable Lambda Layer so you can use 
 it for multiple functions. A Lambda Layer can also be made public so it can be reused by other AWS accounts.
 
-Currently the following public layers is available:
+Currently the following public layer is available:
 
 | Date | Name | Version ARN | Contents |
 | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ pharo --nodisplay pharo.image --no-default-preferences aws-lambda
 #### The AWS-Lamba-Runtime package
 
 This Smalltalk package contains a CommandLineHandler subclass AWSLambdaCommandLineHandler. This handler
-is named **aws-handler**. It performs the following steps:
+is named **aws-lambda**. It performs the following steps:
 
 - Initialization: Read an environment variable **_HANDLER**. This variable contains the name of the
 handler class. This is a Smalltalk class you write to handle incoming tasks.
