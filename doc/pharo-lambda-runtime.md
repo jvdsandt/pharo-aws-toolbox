@@ -45,15 +45,15 @@ handler class. This is a Smalltalk class you write to handle incoming tasks.
 - If the initialization is succesfull a message is written to the log. Otherwise the 
 [Initialization Error](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-initerror)
 api is called to tell the Lambda runtime that something went wrong.
-- After initialization and endless loop first calls the 
+- After initialization an endless loop first calls the 
 [Next Invocation](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-next) api
 to get the next task to execute. The payload of this task is passed to the #handleRequest: method 
 of the handler class. If succesfull, the result is returned by calling the [Invocation Result](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-response)
 api. In case od an error the [Invocation Error](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-invokeerror)
 is called with details about the error.
 
-The Lambda runtime enviroment will keep the Smalltalk image running for unspecified amount of time and
-kill the image if there a no new tasks for a period. Multiple images will be started when there are
+The Lambda runtime enviroment will keep the Smalltalk image running for an unspecified amount of time and
+kill the image if there are no new tasks for a period. Multiple images will be started when there are
 more tasks coming in than a single image can handle.
 
 #### Preparing a Smalltalk image for deployment
