@@ -24,29 +24,12 @@ AWSS3Bucket class >> newWithCredentials: aCredentials region: aRegion host: host
 	^ self basicNew initWithCredentials: aCredentials region: aRegion host: hostname
 ]
 
-{ #category : #internal }
-AWSS3Bucket >> executeRequest: httpRequest [
-
-	| response |
-	
-	self signRequest: httpRequest.
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
-		
-	^ response
-]
-
 { #category : #operations }
 AWSS3Bucket >> get: aKey [
 
 	| url httpRequest response |
 	
 	url := self endpoint asZnUrl / aKey.
-
 	httpRequest := ZnRequest get: url.
 	response := self executeRequest: httpRequest.
 	
@@ -59,7 +42,6 @@ AWSS3Bucket >> head: aKey [
 	| url httpRequest response |
 	
 	url := self endpoint asZnUrl / aKey.
-
 	httpRequest := ZnRequest head: url.
 	response := self executeRequest: httpRequest.
 		

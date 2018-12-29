@@ -100,3 +100,10 @@ AWSEnvironment class >> getRegionNameFromProfile: profileName ifAbsent: aBlock [
 		
 	^ regionName trimmed
 ]
+
+{ #category : #accessing }
+AWSEnvironment class >> hasDefaultCredentials [
+
+	^[ self defaultCredentials notNil ]
+		on: Error do: [ :ex | ex return: false ]
+]

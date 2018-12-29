@@ -47,7 +47,13 @@ AWSService >> handleErrorResponse: httpResponse [
 			data := NeoJSONReader fromString: data.
 			(AWSError data: data) signal ].
 		
-	self error: 'Unknown AWS error'
+	httpResponse isNotFound 
+		ifTrue: [ AWSNotFoundError signal ].
+		
+	httpResponse isForbidden 
+		ifTrue: [ AWSForbiddenError signal ].
+		
+	AWSError signal: 'Unknown error'
 ]
 
 { #category : #accessing }

@@ -5,11 +5,27 @@ Class {
 }
 
 { #category : #internal }
+AWSS3Service >> executeRequest: httpRequest [
+
+	| response |
+	
+	self signRequest: httpRequest.
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ response
+]
+
+{ #category : #internal }
 AWSS3Service >> handleErrorResponse: httpResponse [
 
 	| dom |
 	
-	(ZnMimeType applicationXml matches: httpResponse contentType)
+	((ZnMimeType applicationXml matches: httpResponse contentType) and: [ httpResponse hasEntity ])
 		ifFalse: [ ^ super handleErrorResponse: httpResponse ].
 		
 	dom := self xmlParser parse: httpResponse contents.
