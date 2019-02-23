@@ -20,7 +20,7 @@ best to use a VM with the Timer Heartbeat. It's possible to include the VM with 
 this is not very efficient. A better solution is to package the VM as a reusable Lambda Layer so you can use 
 it for multiple functions. A Lambda Layer can also be made public so it can be reused by other AWS accounts.
 
-Currently the following public layera are available:
+Currently the following public layers are available:
 
 | Date | Name | Version ARN | Contents |
 | --- | --- | --- | --- |
