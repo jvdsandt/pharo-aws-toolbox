@@ -24,6 +24,7 @@ Currently the following public layer is available:
 
 | Date | Name | Version ARN | Contents |
 | --- | --- | --- | --- |
+| 2019-02-23 | Pharo70-runtime | arn:aws:lambda:eu-west-1:544477632270:layer:Pharo70-runtime:1 | Standard Pharo stable VM (5.0-201901051900) |
 | 2018-12-07 | Pharo61-runtime | arn:aws:lambda:eu-west-1:544477632270:layer:Pharo61-runtime:3 | Standard Pharo stable VM (5.0-201806281256) |
 
 This VM works with Pharo 6.1 and 7.0 64 bits images. The layer is a zip file with the Pharo Smalltalk packaged
