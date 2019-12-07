@@ -38,7 +38,7 @@ AWSLambdaEnvironment >> allOSEnvironmentVariables [
 				dict 
 					at: each put: ((secretVars includes: each) 
 						ifTrue: [ '******' ]
-						ifFalse: [OSEnvironment current getEnv: each ]);
+						ifFalse: [ OSEnvironment current at: each ]);
 					yourself ]
 ]
 
@@ -65,7 +65,7 @@ AWSLambdaEnvironment >> awsCredentials [
 { #category : #accessing }
 AWSLambdaEnvironment >> getEnv: varName [
 
-	^ OSEnvironment current getEnv: varName
+	^ OSEnvironment current at: varName ifAbsent: [ nil ]
 ]
 
 { #category : #accessing }

@@ -27,19 +27,18 @@ AWSEnvironment class >> getCredentialsFromEnvironment [
 	"Try to get AWS Credentials from OS environment variables. Answer nil if these
 	variables are not defined."
 
-	| accessKeyId secretKey sessionToken |
-	
-	accessKeyId := OSEnvironment current getEnv: 'AWS_ACCESS_KEY_ID'.
-	accessKeyId isNil
-		ifTrue: [ accessKeyId := OSEnvironment current getEnv: 'AWS_ACCESS_KEY' ].
-		
-	secretKey := OSEnvironment current getEnv: 'AWS_SECRET_KEY'.
+	| env accessKeyId secretKey sessionToken |
+	env := OSEnvironment current.
+	accessKeyId := env at: 'AWS_ACCESS_KEY_ID'
+		ifAbsent: [ env at: 'AWS_ACCESS_KEY' ifAbsent: [ nil ]].
+	secretKey := env at: 'AWS_SECRET_KEY' ifAbsent: [ nil ].
 	(accessKeyId isEmptyOrNil or: [ secretKey isEmptyOrNil ])
 		ifTrue: [ ^ nil ].
-	
-	sessionToken := OSEnvironment current getEnv: 'AWS_SESSION_TOKEN'.
-	
-	^ AWSCredentials accessKeyId: accessKeyId secretKey: secretKey sessionToken: sessionToken
+	sessionToken := env getEnv: 'AWS_SESSION_TOKEN'.
+	^ AWSCredentials
+		accessKeyId: accessKeyId
+		secretKey: secretKey
+		sessionToken: sessionToken
 ]
 
 { #category : #utilities }
@@ -76,8 +75,8 @@ AWSEnvironment class >> getCredentialsFromProfile: profileName ifAbsent: aBlock 
 AWSEnvironment class >> getRegionNameFromEnvironment [
 	"Try to get AWS Region from a OS environment variable. Answer nil if the
 	variable is not defined."
-	
-	^ OSEnvironment current getEnv: 'AWS_DEFAULT_REGION'
+
+	^ OSEnvironment current at: 'AWS_DEFAULT_REGION' ifAbsent: [ nil ]
 ]
 
 { #category : #utilities }
