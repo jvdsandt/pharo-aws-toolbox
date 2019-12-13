@@ -34,6 +34,17 @@ AWSError class >> subclassForErrorType: aString [
 { #category : #'instance creation' }
 AWSError class >> xmlData: rootElement [
 
+	rootElement name = 'Error'
+		ifTrue: [ ^self xmlErrorData: rootElement ].
+	rootElement name = 'ErrorResponse'
+		ifTrue: [ ^ self xmlErrorResponseData: rootElement ].
+
+	^ self data: (Array with: 'Error' -> rootElement asString) asDictionary
+]
+
+{ #category : #'instance creation' }
+AWSError class >> xmlErrorData: rootElement [
+
 	| data msg |
 	
 	self assert: rootElement name = 'Error'.
@@ -48,6 +59,20 @@ AWSError class >> xmlData: rootElement [
 			signal: msg
 ]
 
+{ #category : #'instance creation' }
+AWSError class >> xmlErrorResponseData: rootElement [
+
+	self assert: rootElement name = 'ErrorResponse'.
+	^ self xmlErrorData: (rootElement elementAt: 'Error')
+	
+
+]
+
+{ #category : #accessing }
+AWSError >> code [
+	^ data ifNotNil: [ data at: 'Code' ifAbsent: [ nil ] ]
+]
+
 { #category : #accessing }
 AWSError >> data [
 	^ data
@@ -58,4 +83,9 @@ AWSError >> data: aDictionary [
 
 	data := aDictionary.
 	self messageText: (aDictionary at: 'message' ifAbsent: [ nil ])
+]
+
+{ #category : #accessing }
+AWSError >> type [
+	^ data ifNotNil: [ data at: 'Type' ifAbsent: [ nil ] ]
 ]

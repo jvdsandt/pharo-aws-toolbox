@@ -25,6 +25,18 @@ AWSS3Bucket class >> newWithCredentials: aCredentials region: aRegion host: host
 ]
 
 { #category : #operations }
+AWSS3Bucket >> delete: aKey [
+
+	| url httpRequest response |
+	
+	url := self endpoint asZnUrl / aKey.
+	httpRequest := ZnRequest delete: url.
+	response := self executeRequest: httpRequest.
+	
+	^ response
+]
+
+{ #category : #operations }
 AWSS3Bucket >> get: aKey [
 
 	| url httpRequest response |

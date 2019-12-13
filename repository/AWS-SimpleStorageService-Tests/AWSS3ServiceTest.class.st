@@ -1,37 +1,11 @@
 Class {
 	#name : #AWSS3ServiceTest,
-	#superclass : #TestCase,
+	#superclass : #AWSIntegrationTest,
 	#classVars : [
-		'Credentials',
-		'RegionName',
 		'TestBucketName'
 	],
 	#category : #'AWS-SimpleStorageService-Tests'
 }
-
-{ #category : #accessing }
-AWSS3ServiceTest class >> credentials [
-
-	^ Credentials ifNil: [ AWSEnvironment defaultCredentials ]
-]
-
-{ #category : #accessing }
-AWSS3ServiceTest class >> credentials: awsCredentials [
-
-	Credentials := awsCredentials
-]
-
-{ #category : #accessing }
-AWSS3ServiceTest class >> regionName [
-
-	^ RegionName ifNil: [ AWSEnvironment defaultRegionName ]
-]
-
-{ #category : #accessing }
-AWSS3ServiceTest class >> regionName: aString [
-
-	RegionName := aString
-]
 
 { #category : #accessing }
 AWSS3ServiceTest class >> testBucketName [
@@ -102,11 +76,26 @@ AWSS3ServiceTest >> testPutObject [
 	bytes := ByteArray streamContents: [ :s |
 		1 to: 10240 do: [ :index |
 			s nextPut: index \\ 256 ] ].
-	
 	entity := ZnByteArrayEntity bytes: bytes.
 			
 	result := s3b put: entity key: 'testobject.bin' headers: { 
 		'X-Pharo-H1' -> 'abc'.
 		'X-Pharo-H2' -> 'qwerty'	
 	 } asDictionary.
+	
+	self assert: result status equals: 200.
+	self assert: (result headers at: 'Etag') equals: '"a706f5748be39c7724383a73b0a9ac5c"'.
+	self assert: (result headers at: 'Etag') allButFirst allButLast 
+		equals: (MD5 new hashMessage: bytes) hex.
+	
+	result := s3b get: 'testobject.bin'.
+	self assert: result status equals: 200.
+	self assert: (result headers at: 'Etag') equals: '"a706f5748be39c7724383a73b0a9ac5c"'.
+	self assert: result contents equals: bytes.
+	
+	result := s3b delete: 'testobject.bin'.
+	self assert: result status equals: 204.
+	
+	
+
 ]

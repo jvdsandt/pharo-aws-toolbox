@@ -8,22 +8,14 @@ Class {
 }
 
 { #category : #adding }
-AWSSQSCreateQueueRequest >> addParametersTo: anUrl [
+AWSSQSCreateQueueRequest >> asEntity [
 
-	anUrl
-		queryAt: 'Action' put: 'CreateQueue';
-		queryAt: 'QueueName' put: self queueName;
-		queryAt: 'Version' put: self version
-]
-
-{ #category : #adding }
-AWSSQSCreateQueueRequest >> asFormUrlEncodedEntity [
-
-	^ ZnApplicationFormUrlEncodedEntity new
-		at: 'Action' put: 'CreateQueue';
-		at: 'QueueName' put: self queueName;
-		at: 'Version' put: self version;
-		yourself
+	^ self convertEntity: (
+		ZnApplicationFormUrlEncodedEntity new
+			at: 'Action' put: 'CreateQueue';
+			at: 'QueueName' put: self queueName;
+			at: 'Version' put: self version;
+			yourself)
 ]
 
 { #category : #accessing }

@@ -19,7 +19,7 @@ AWSEnvironment class >> defaultRegionName [
 
 	^ self getRegionNameFromEnvironment 
 			ifNil: [ self getRegionNameFromProfile: 'default' 
-				ifAbsent: [ self error: '' ] ]
+				ifAbsent: [ self error: 'No default region present' ] ]
 ]
 
 { #category : #utilities }

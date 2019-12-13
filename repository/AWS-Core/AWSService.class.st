@@ -53,7 +53,7 @@ AWSService >> handleErrorResponse: httpResponse [
 	httpResponse code = 403 
 		ifTrue: [ AWSForbiddenError signal ].
 		
-	AWSError signal: 'Unknown error'
+	AWSError signal: httpResponse code asString, ' - Unknown error'
 ]
 
 { #category : #accessing }
