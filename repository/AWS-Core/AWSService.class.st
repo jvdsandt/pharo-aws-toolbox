@@ -50,7 +50,7 @@ AWSService >> handleErrorResponse: httpResponse [
 	httpResponse isNotFound 
 		ifTrue: [ AWSNotFoundError signal ].
 		
-	httpResponse isForbidden 
+	httpResponse code = 403 
 		ifTrue: [ AWSForbiddenError signal ].
 		
 	AWSError signal: 'Unknown error'
