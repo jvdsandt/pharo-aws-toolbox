@@ -69,6 +69,35 @@ AWSSQService >> deleteQueue: aQueueUrl [
 ]
 
 { #category : #api }
+AWSSQService >> getQueueAttributes: aQueueUrl names: attribNames [
+	"Gets attributes for the specified queue."
+
+	| entity httpRequest response |
+	
+	entity := ZnApplicationFormUrlEncodedEntity new
+			at: 'Action' put: 'GetQueueAttributes';
+			at: 'Version' put: AWSSQSRequest version;
+			yourself.
+	attribNames 
+		ifNotNil: [ 
+			attribNames doWithIndex: [ :name :index |
+				entity at: 'AttributeName.', index asString put: name ] ].
+	httpRequest := ZnRequest post: aQueueUrl.
+	httpRequest entity: (AWSSQSRequest convertEntity: entity).
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+		
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ AWSSQSGetAttributesResponse fromXmlString: response contents
+]
+
+{ #category : #api }
 AWSSQService >> getQueueUrl: queueName ifAbsent: absentBlock [
 
 	| url httpRequest response xmlDoc |

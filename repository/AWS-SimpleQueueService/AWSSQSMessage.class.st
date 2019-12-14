@@ -8,6 +8,22 @@ Class {
 }
 
 { #category : #accessing }
+AWSSQSMessage >> attributeAt: aName [
+	self messageXml elementsAt: 'Attribute' do: [ :each |
+		| attrib |
+		attrib := AWSSQSAttribute fromXmlElement: each.
+		attrib name = aName
+			ifTrue: [ ^ attrib value ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+AWSSQSMessage >> attributes [
+	^ ((self messageXml elementsAt: 'Attribute')
+			collect: [ :each | AWSSQSAttribute fromXmlElement: each ]) asArray
+]
+
+{ #category : #accessing }
 AWSSQSMessage >> body [
 	^ self messageXml contentStringAt: 'Body'
 ]

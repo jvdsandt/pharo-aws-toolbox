@@ -41,6 +41,18 @@ AWSSQServiceIntegrationTest >> sqsservice [
 ]
 
 { #category : #tests }
+AWSSQServiceIntegrationTest >> testGetQueueAttributes [
+
+	| testQ response |
+	
+	testQ := 	self sqsTestQueueUrl.
+	response := self sqsservice getQueueAttributes: testQ names: #( 'All' ).
+	
+	self assert: (response attributeAt: 'MaximumMessageSize') asInteger > (250 * 1024).
+
+]
+
+{ #category : #tests }
 AWSSQServiceIntegrationTest >> testGetQueueUrl [
 
 	| testQ |
@@ -88,6 +100,8 @@ AWSSQServiceIntegrationTest >> testMessages [
 	message := response messages first.
 	self assert: message md5OfBody equals: md5.
 	self assert: message body equals: 'Message-1'.
+	self assert: (message attributeAt: 'SenderId') notNil.
+	self assert: (message attributeAt: 'SentTimestamp') notNil.
 
 	response := self sqsservice deleteMessage: message receiptHandle on: testQ.
 	self assert: response requestId notNil
