@@ -17,7 +17,7 @@ BaselineOfAWSToolbox >> baseline: spec [
 						repository: 'github://svenvc/NeoJSON:master/repository';
 						loads: 'core' ].
 			spec
-				baseline: 'XML-XMLParser'
+				baseline: 'XMLParser'
 				with: [ 
 					spec
 						repository: 'github://pharo-contributions/XML-XMLParser/src';
@@ -31,11 +31,11 @@ BaselineOfAWSToolbox >> baseline: spec [
 				package: 'AWS-Lambda-Runtime-Tests' with: [ spec requires: #( 'AWS-Lambda-Runtime' ) ].
 				
 			spec 
-				package: 'AWS-SimpleStorageService' with: [ spec requires: #( 'AWS-Core' 'XML-XMLParser' ) ];
+				package: 'AWS-SimpleStorageService' with: [ spec requires: #( 'AWS-Core' 'XMLParser' ) ];
 				package: 'AWS-SimpleStorageService-Tests' with: [ spec requires: #( 'AWS-SimpleStorageService' ) ].
 				
 			spec 
-				package: 'AWS-SimpleQueueService' with: [ spec requires: #( 'AWS-Core' 'XML-XMLParser' ) ];
+				package: 'AWS-SimpleQueueService' with: [ spec requires: #( 'AWS-Core' 'XMLParser' ) ];
 				package: 'AWS-SimpleQueueService-Tests' with: [ spec requires: #( 'AWS-SimpleQueueService' ) ].
 
 			spec 
