@@ -25,6 +25,50 @@ AWSSQService >> createQueue: aCreateQueueRequest [
 ]
 
 { #category : #api }
+AWSSQService >> deleteMessage: aReceiptHandle on: aQueueUrl [
+
+	| httpRequest response |
+
+	httpRequest := ZnRequest post: aQueueUrl.
+	httpRequest entity: (AWSSQSRequest convertEntity: (
+		ZnApplicationFormUrlEncodedEntity new
+			at: 'Action' put: 'DeleteMessage';
+			at: 'ReceiptHandle' put: aReceiptHandle;
+			at: 'Version' put: AWSSQSRequest version;
+			yourself)).
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+		
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ AWSSQSResponse fromXmlString: response contents
+]
+
+{ #category : #api }
+AWSSQService >> deleteQueue: aQueueUrl [
+	"Deletes the messages in a queue specified by the QueueURL parameter."
+
+	| httpRequest response |
+
+	httpRequest := ZnRequest post: aQueueUrl.
+	httpRequest entity: (AWSSQSRequest createEntityForAction: 'DeleteQueue').
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+		
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+]
+
+{ #category : #api }
 AWSSQService >> getQueueUrl: queueName ifAbsent: absentBlock [
 
 	| url httpRequest response xmlDoc |
@@ -32,7 +76,7 @@ AWSSQService >> getQueueUrl: queueName ifAbsent: absentBlock [
 	url := self endpoint asZnUrl.
 	url queryAt: 'Action' put: 'GetQueueUrl'.
 	url queryAt: 'QueueName' put: queueName.
-	url queryAt: 'Version' put: '2012-11-05'.
+	url queryAt: 'Version' put: AWSSQSRequest version.
 	httpRequest := ZnRequest get: url.
 	self signRequest: httpRequest.
 	
@@ -102,6 +146,45 @@ AWSSQService >> listQueues: aPrefix [
 ]
 
 { #category : #api }
+AWSSQService >> purgeQueue: aQueueUrl [
+	"Deletes the messages in a queue specified by the QueueURL parameter."
+
+	| httpRequest response |
+
+	httpRequest := ZnRequest post: aQueueUrl.
+	httpRequest entity: (AWSSQSRequest createEntityForAction: 'DeleteQueue').
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+		
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+]
+
+{ #category : #api }
+AWSSQService >> receiveMessage: aReceiveMessageRequest on: aQueueUrl [
+
+	| httpRequest response |
+
+	httpRequest := ZnRequest post: aQueueUrl.
+	httpRequest entity: aReceiveMessageRequest asEntity.
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+		
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ AWSSQSReceiveMessageResponse fromXmlString: response contents
+]
+
+{ #category : #api }
 AWSSQService >> sendMessage: aSendMessageRequest on: aQueueUrl [
 
 	| httpRequest response |
@@ -118,7 +201,7 @@ AWSSQService >> sendMessage: aSendMessageRequest on: aQueueUrl [
 	response isSuccess 
 		ifFalse: [ self handleErrorResponse: response ].
 		
-	^ AWSSQSCreateQueueResponse fromXmlString: response contents
+	^ AWSSQSSendMessageResponse fromXmlString: response contents
 ]
 
 { #category : #resources }

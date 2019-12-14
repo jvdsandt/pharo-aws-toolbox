@@ -10,7 +10,7 @@ Class {
 { #category : #adding }
 AWSSQSCreateQueueRequest >> asEntity [
 
-	^ self convertEntity: (
+	^ self class convertEntity: (
 		ZnApplicationFormUrlEncodedEntity new
 			at: 'Action' put: 'CreateQueue';
 			at: 'QueueName' put: self queueName;

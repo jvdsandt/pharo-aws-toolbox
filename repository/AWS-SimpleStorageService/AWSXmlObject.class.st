@@ -5,10 +5,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+AWSXmlObject class >> fromXmlElement: anElement [
+	^ self new initFromXmlElement: anElement
+]
+
+{ #category : #'instance creation' }
 AWSXmlObject class >> fromXmlString: aString [
 
 	| xmlDoc |
 	
 	xmlDoc := XMLDOMParser parse: aString.
-	^ self new initFromXmlElement: xmlDoc root
+	^ self fromXmlElement: xmlDoc root
 ]

@@ -1,20 +1,10 @@
 Class {
 	#name : #AWSSQSCreateQueueResponse,
-	#superclass : #AWSXmlObject,
-	#instVars : [
-		'queueUrl'
-	],
+	#superclass : #AWSSQSResponse,
 	#category : #'AWS-SimpleQueueService'
 }
 
-{ #category : #initialization }
-AWSSQSCreateQueueResponse >> initFromXmlElement: xmlElement [
-
-	queueUrl := xmlElement contentStringAt: 'QueueUrl'.
-
-]
-
 { #category : #accessing }
 AWSSQSCreateQueueResponse >> queueUrl [
-	^ queueUrl
+	^ self resultXml contentStringAt: 'QueueUrl'.
 ]
