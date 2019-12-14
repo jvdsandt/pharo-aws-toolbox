@@ -35,3 +35,4 @@ Metacello new
 
 Pharo AWS Toolbox has the following dependencies:
 - [NeoJSON](https://github.com/svenvc/NeoJSON) - Used for reading and writing JSON data.
+- [XML-XMLParser](https://github.com/pharo-contributions/XML-XMLParser)
