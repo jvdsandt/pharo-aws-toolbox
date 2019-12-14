@@ -37,7 +37,7 @@ AWSSQServiceIntegrationTest >> sqsTestQueueUrl [
 AWSSQServiceIntegrationTest >> sqsservice [
 
 	^ sqsservice ifNil: [
-		sqsservice := AWSSQService newWithCredentials: self class credentials region: self class regionName ]
+		sqsservice := AWSSQService newWithCredentials: self credentials region: self regionName ]
 ]
 
 { #category : #tests }

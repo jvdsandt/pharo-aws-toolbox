@@ -32,13 +32,14 @@ BaselineOfAWSToolbox >> baseline: spec [
 				
 			spec 
 				package: 'AWS-SimpleStorageService' with: [ spec requires: #( 'AWS-Core' 'XML-XMLParser' ) ];
-				package: 'AWS-SimpleStorageService-Tests' with: [ spec required: #( 'AWS-SimpleStorageService' ) ].
+				package: 'AWS-SimpleStorageService-Tests' with: [ spec requires: #( 'AWS-SimpleStorageService' ) ].
 				
 			spec 
-				package: 'AWS-SimpleQueueService' with: [ spec requires: #( 'AWS-Core ' 'XML-XMLParser' ) ].
+				package: 'AWS-SimpleQueueService' with: [ spec requires: #( 'AWS-Core' 'XML-XMLParser' ) ];
+				package: 'AWS-SimpleQueueService-Tests' with: [ spec requires: #( 'AWS-SimpleQueueService' ) ].
 
 			spec 
-				group: 'Core' with: #( 'AWS-Lambda-Runtime' );
-				group: 'Tests' with: #( 'AWS-Lambda-Runtime-Tests' );
+				group: 'Core' with: #( 'AWS-Lambda-Runtime' 'AWS-SimpleStorageService' 'AWS-SimpleQueueService' );
+				group: 'Tests' with: #( 'AWS-Lambda-Runtime-Tests' 'AWS-SimpleStorageService-Tests' 'AWS-SimpleQueueService-Tests' );
 				group: 'default' with: #( 'Core' 'Tests' ) ] 
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #AWSS3ServiceTest,
+	#name : #AWSS3ServiceIntegrationTest,
 	#superclass : #AWSIntegrationTest,
 	#classVars : [
 		'TestBucketName'
@@ -8,25 +8,25 @@ Class {
 }
 
 { #category : #accessing }
-AWSS3ServiceTest class >> testBucketName [
+AWSS3ServiceIntegrationTest class >> testBucketName [
 
 	^ TestBucketName ifNil: [ TestBucketName := 'pharo-aws-toolbox' ]
 ]
 
 { #category : #accessing }
-AWSS3ServiceTest class >> testBucketName: aString [
+AWSS3ServiceIntegrationTest class >> testBucketName: aString [
 
 	TestBucketName := aString
 ]
 
 { #category : #accessing }
-AWSS3ServiceTest >> s3service [
+AWSS3ServiceIntegrationTest >> s3service [
 
-	^ AWSSimpleStorageService newWithCredentials: self class credentials region: self class regionName
+	^ AWSSimpleStorageService newWithCredentials: self credentials region: self regionName
 ]
 
 { #category : #accessing }
-AWSS3ServiceTest >> s3testBucket [
+AWSS3ServiceIntegrationTest >> s3testBucket [
 
 	| s3s |
 	
@@ -34,21 +34,13 @@ AWSS3ServiceTest >> s3testBucket [
 	(s3s hasBucket: self class testBucketName)
 		ifFalse: [ s3s put: self class testBucketName ].
 		
-	^ AWSS3Bucket newWithCredentials: self class credentials
-			region: self class regionName
+	^ AWSS3Bucket newWithCredentials: self credentials
+			region: self regionName
 			bucket: self class testBucketName 
 ]
 
-{ #category : #running }
-AWSS3ServiceTest >> setUp [
-
-	super setUp.
-	(Credentials isNil and: [ AWSEnvironment hasDefaultCredentials not ])
-		ifTrue: [ self skip: 'No AWS Credentials set' ]
-]
-
 { #category : #tests }
-AWSS3ServiceTest >> testBucketSetup [
+AWSS3ServiceIntegrationTest >> testBucketSetup [
 
 	| s3b result |
 	
@@ -58,7 +50,7 @@ AWSS3ServiceTest >> testBucketSetup [
 ]
 
 { #category : #tests }
-AWSS3ServiceTest >> testGetBuckets [
+AWSS3ServiceIntegrationTest >> testGetBuckets [
 
 	| result |
 	
@@ -67,7 +59,7 @@ AWSS3ServiceTest >> testGetBuckets [
 ]
 
 { #category : #tests }
-AWSS3ServiceTest >> testPutObject [
+AWSS3ServiceIntegrationTest >> testPutObject [
 
 	| s3b bytes entity result |
 	

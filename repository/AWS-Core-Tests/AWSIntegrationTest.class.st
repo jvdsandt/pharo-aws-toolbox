@@ -1,33 +1,23 @@
 Class {
 	#name : #AWSIntegrationTest,
 	#superclass : #TestCase,
-	#classVars : [
-		'Credentials',
-		'RegionName'
-	],
 	#category : #'AWS-Core-Tests'
 }
 
 { #category : #accessing }
-AWSIntegrationTest class >> credentials [
+AWSIntegrationTest class >> resources [
 
-	^ Credentials ifNil: [ AWSEnvironment defaultCredentials ]
+	^ Array with: AWSIntegrationTestResource
 ]
 
-{ #category : #accessing }
-AWSIntegrationTest class >> credentials: awsCredentials [
+{ #category : #resources }
+AWSIntegrationTest >> credentials [
 
-	Credentials := awsCredentials
+	^ AWSIntegrationTestResource current credentials
 ]
 
-{ #category : #accessing }
-AWSIntegrationTest class >> regionName [
+{ #category : #resources }
+AWSIntegrationTest >> regionName [
 
-	^ RegionName ifNil: [ AWSEnvironment defaultRegionName ]
-]
-
-{ #category : #accessing }
-AWSIntegrationTest class >> regionName: aString [
-
-	RegionName := aString
+	^ AWSIntegrationTestResource current regionName
 ]
