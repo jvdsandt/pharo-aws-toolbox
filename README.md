@@ -6,6 +6,8 @@ This project contains packages to interact with various Amazon Web Services. Cur
 
 - Build Lambda functions using Pharo Smalltalk
 - Writing log events to the CloudWatch Logs service
+- Access to the Amazon Simple Storage Service (S3) - only a part of api is implemented yet
+- Access to the Amazon Simple Queueing Service (SQS)
 
 ## Pharo Lambda Runtime
 
@@ -36,3 +38,13 @@ Metacello new
 Pharo AWS Toolbox has the following dependencies:
 - [NeoJSON](https://github.com/svenvc/NeoJSON) - Used for reading and writing JSON data.
 - [XML-XMLParser](https://github.com/pharo-contributions/XML-XMLParser)
+
+## Working with AWS Credentials
+
+To make requests to Amazon Web Services, you must supply AWS credentials. You can use the class AWSEnvironment to access the credentials and region information stored on your computer. It can read your credentials and region name from standard AWS environment variables:
+* AWS_ACCESS_KEY_ID / AWS_ACCESS_KEY
+* AWS_SECRET_KEY
+* AWS_SESSION_TOKEN
+* AWS_DEFAULT_REGION
+
+Another possibility is to read the credentails from standard AWS credentials file ~/.aws/credentials and the region name from ~/.aws/config
