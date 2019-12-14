@@ -10,7 +10,7 @@ AWSEnvironment class >> defaultCredentials [
 
 	^ self getCredentialsFromEnvironment 
 			ifNil: [ self getCredentialsFromProfile: 'default' 
-				ifAbsent: [ self error: '' ] ]
+				ifAbsent: [ self error: 'No AWS credentials present' ] ]
 ]
 
 { #category : #accessing }
@@ -19,7 +19,7 @@ AWSEnvironment class >> defaultRegionName [
 
 	^ self getRegionNameFromEnvironment 
 			ifNil: [ self getRegionNameFromProfile: 'default' 
-				ifAbsent: [ self error: 'No default region present' ] ]
+				ifAbsent: [ self error: 'No default AWS region present' ] ]
 ]
 
 { #category : #utilities }
