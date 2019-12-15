@@ -39,6 +39,22 @@ AWSSQSMessage >> md5OfBody [
 ]
 
 { #category : #accessing }
+AWSSQSMessage >> messageAttributeAt: aName [
+	self messageXml elementsAt: 'MessageAttribute' do: [ :each |
+		| attrib |
+		attrib := AWSSQSMessageAttribute fromXmlElement: each.
+		attrib name = aName
+			ifTrue: [ ^ attrib value ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+AWSSQSMessage >> messageAttributes [
+	^ ((self messageXml elementsAt: 'MessageAttribute')
+			collect: [ :each | AWSSQSMessageAttribute fromXmlElement: each ]) asArray
+]
+
+{ #category : #accessing }
 AWSSQSMessage >> messageId [
 	^ self messageXml contentStringAt: 'MessageId'
 ]

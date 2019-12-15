@@ -9,6 +9,47 @@ Class {
 	#category : #'AWS-SimpleQueueService'
 }
 
+{ #category : #adding }
+AWSSQSSendMessageRequest >> addAttribute: attribDictionary [
+
+	attributes isNil
+		ifTrue: [ attributes := OrderedCollection new ].
+	^ attributes add: attribDictionary
+]
+
+{ #category : #adding }
+AWSSQSSendMessageRequest >> addBinaryAttribute: aName value: aByteArray [
+
+	self addAttribute: (
+		Dictionary new
+			at: 'Name' put: aName;
+			at: 'Value.DataType' put: 'Binary';
+			at: 'Value.BinaryValue' put: (ZnBase64Encoder new encode: aByteArray);
+			yourself)
+]
+
+{ #category : #adding }
+AWSSQSSendMessageRequest >> addNumberAttribute: aName value: aNumber [
+
+	self addAttribute: (
+		Dictionary new
+			at: 'Name' put: aName;
+			at: 'Value.DataType' put: 'Number';
+			at: 'Value.StringValue' put: aNumber asString;
+			yourself)
+]
+
+{ #category : #adding }
+AWSSQSSendMessageRequest >> addStringAttribute: aName value: aString [
+
+	self addAttribute: (
+		Dictionary new
+			at: 'Name' put: aName;
+			at: 'Value.DataType' put: 'String';
+			at: 'Value.StringValue' put: aString;
+			yourself)
+]
+
 { #category : #converting }
 AWSSQSSendMessageRequest >> asEntity [
 
@@ -22,18 +63,16 @@ AWSSQSSendMessageRequest >> asEntity [
 			
 	self delaySeconds notNil
 		ifTrue: [ entity at: 'DelaySeconds' put: self delaySeconds asString ].
+	attributes 
+		ifNotNil: [ 
+			| index |
+			index := 1.
+			attributes do: [ :eachDict |
+				eachDict keysAndValuesDo: [ :eachKey :eachValue | 
+					entity at: 'MessageAttribute.', index asString, '.', eachKey put: eachValue ].
+				index := index + 1 ] ].
 
 	^ self class convertEntity: entity
-]
-
-{ #category : #accessing }
-AWSSQSSendMessageRequest >> attributes [
-	^ attributes
-]
-
-{ #category : #accessing }
-AWSSQSSendMessageRequest >> attributes: anObject [
-	attributes := anObject
 ]
 
 { #category : #accessing }

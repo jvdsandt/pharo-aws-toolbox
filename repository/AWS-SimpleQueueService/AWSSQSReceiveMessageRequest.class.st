@@ -34,7 +34,7 @@ AWSSQSReceiveMessageRequest >> asEntity [
 	self messageAttributeNames 
 		ifNotNil: [ 
 			self messageAttributeNames doWithIndex: [ :name :index |
-				entity at: 'AttributeName.', index asString put: name ] ].
+				entity at: 'MessageAttributeName.', index asString put: name ] ].
 
 	^ self class convertEntity: entity
 ]

@@ -61,6 +61,7 @@ AWSService >> httpClient [
 
 	^ httpClient ifNil: [ 
 			httpClient := ZnClient new
+				loggingOff;
 				systemPolicy;
 				enforceHttpSuccess: false;
 				enforceAcceptContentType: false;
