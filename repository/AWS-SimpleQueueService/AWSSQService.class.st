@@ -216,21 +216,25 @@ AWSSQService >> receiveMessage: aReceiveMessageRequest on: aQueueUrl [
 { #category : #api }
 AWSSQService >> sendMessage: aSendMessageRequest on: aQueueUrl [
 
-	| httpRequest response |
+	| httpRequest httpResponse response md5hash |
 
 	httpRequest := ZnRequest post: aQueueUrl.
 	httpRequest entity: aSendMessageRequest asEntity.
 	self signRequest: httpRequest.
+	md5hash := MD5 new hashMessage: aSendMessageRequest body utf8Encoded. 
 	
-	response := self httpClient 
+	httpResponse := self httpClient 
 		request: httpRequest;
 		execute;
 		response.
 		
-	response isSuccess 
-		ifFalse: [ self handleErrorResponse: response ].
+	httpResponse isSuccess 
+		ifFalse: [ self handleErrorResponse: httpResponse ].
+	response := AWSSQSSendMessageResponse fromXmlString: httpResponse contents.
+	(md5hash hex match: response md5OfMessageBody)
+		ifFalse: [ AWSError signal: 'Data error - hash mismatch' ].
 		
-	^ AWSSQSSendMessageResponse fromXmlString: response contents
+	^ response
 ]
 
 { #category : #resources }

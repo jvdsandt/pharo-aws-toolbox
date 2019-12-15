@@ -1,9 +1,6 @@
 Class {
 	#name : #AWSSQServiceIntegrationTest,
-	#superclass : #AWSIntegrationTest,
-	#instVars : [
-		'sqsservice'
-	],
+	#superclass : #AWSSQSIntegrationTest,
 	#category : #'AWS-SimpleQueueService-Tests'
 }
 
@@ -14,30 +11,6 @@ AWSSQServiceIntegrationTest >> sqsTestQueueName [
 
 	
 
-]
-
-{ #category : #accessing }
-AWSSQServiceIntegrationTest >> sqsTestQueueUrl [
-
-	| queueUrl |
-	
-	queueUrl := self sqsservice getQueueUrl: self sqsTestQueueName ifAbsent: [ nil ].
-	queueUrl isNil
-		ifTrue: [ 
-			| result |
-			result := self sqsservice createQueue: (AWSSQSCreateQueueRequest new
-				queueName: self sqsTestQueueName;
-				yourself).
-			queueUrl := result queueUrl ].
-		
-	^ queueUrl
-]
-
-{ #category : #accessing }
-AWSSQServiceIntegrationTest >> sqsservice [
-
-	^ sqsservice ifNil: [
-		sqsservice := AWSSQService newWithCredentials: self credentials region: self regionName ]
 ]
 
 { #category : #tests }
@@ -72,6 +45,43 @@ AWSSQServiceIntegrationTest >> testListQueues [
 	self assert: list notNil
 	
 
+]
+
+{ #category : #tests }
+AWSSQServiceIntegrationTest >> testMessageAttributes [
+
+	| testQ response md5 message |
+	
+	testQ := self sqsTestQueueUrl.
+	
+	response := self sqsservice sendMessage: (AWSSQSSendMessageRequest new
+			body: 'Message-1';
+			addStringAttribute: 'MyString' value: 'MyStringValue';
+			addNumberAttribute: 'MyNumber' value: 1234567890;
+			addBinaryAttribute: 'MyBytes' value: #[ 100 110 120 130 140 150 160 170 180 190 200 210 220 230 240 250 ];
+			yourself)
+		on: testQ.
+	md5 := (MD5 new hashMessage: 'Message-1' utf8Encoded) hex.
+	self assert: response md5OfMessageBody equals: md5.
+
+	(Delay forMilliseconds: 300) wait.
+	
+	response := self sqsservice receiveMessage: (AWSSQSReceiveMessageRequest new
+			maxNumberOfMessages: 1;
+			messageAttributeNames: #( 'All' );
+			visibilityTimeout: 4;
+			yourself)
+		on: testQ.
+	self assert: response messages size equals: 1.
+	message := response messages first.
+	self assert: message md5OfBody equals: md5.
+	self assert: message body equals: 'Message-1'.
+	self assert: (message messageAttributeAt: 'MyString') equals: 'MyStringValue'.
+	self assert: (message messageAttributeAt: 'MyNumber') equals: 1234567890.
+	self assert: (message messageAttributeAt: 'MyBytes') equals: #[ 100 110 120 130 140 150 160 170 180 190 200 210 220 230 240 250 ].
+
+	response := self sqsservice deleteMessage: message receiptHandle on: testQ.
+	self assert: response requestId notNil
 ]
 
 { #category : #tests }
