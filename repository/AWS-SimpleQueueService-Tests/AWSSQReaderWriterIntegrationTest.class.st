@@ -22,10 +22,11 @@ AWSSQReaderWriterIntegrationTest >> sqsservice [
 { #category : #tests }
 AWSSQReaderWriterIntegrationTest >> testNextMessage [
 
-	| writer reader msg1 msg2 |
+	| queueUrl writer reader msg1 msg2 |
 	
-	writer := AWSSQSWriter service: self sqsservice queueUrl: self sqsTestQueueUrl.
-	reader := AWSSQSReader service: self sqsservice queueUrl: self sqsTestQueueUrl.
+	queueUrl := self sqsTestQueueUrl.
+	writer := AWSSQSWriter service: self sqsservice queueUrl: queueUrl.
+	reader := AWSSQSReader service: self createSqsservice queueUrl: queueUrl.
 	self assert: (reader nextMessageIfNone: [ #none ]) equals: #none.
 	
 	writer writeBody: 'Message-A'.
@@ -67,10 +68,11 @@ AWSSQReaderWriterIntegrationTest >> testProcessBlock [
 { #category : #tests }
 AWSSQReaderWriterIntegrationTest >> testProcessNext [
 
-	| writer reader msg1 msg2 |
+	| queueUrl writer reader msg1 msg2 |
 	
-	writer := AWSSQSWriter service: self sqsservice queueUrl: self sqsTestQueueUrl.
-	reader := AWSSQSReader service: self sqsservice queueUrl: self sqsTestQueueUrl.
+	queueUrl := self sqsTestQueueUrl.
+	writer := AWSSQSWriter service: self sqsservice queueUrl: queueUrl.
+	reader := AWSSQSReader service: self createSqsservice queueUrl: queueUrl.
 	self assert: (reader nextMessageIfNone: [ #none ]) equals: #none.
 	
 	writer writeBody: 'Message-A'.
