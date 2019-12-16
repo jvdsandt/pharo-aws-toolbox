@@ -29,12 +29,6 @@ AWSLambdaHandler >> handleRequest: eventData [
 	^self systemInfoDictionary
 ]
 
-{ #category : #initialization }
-AWSLambdaHandler >> initialiWithEnvironment: lambdaEnvironment [
-	"Called once durint the initialization fase"
-
-]
-
 { #category : #accessing }
 AWSLambdaHandler >> logStream [
 	^ self context logStream
