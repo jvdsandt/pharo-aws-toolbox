@@ -12,6 +12,7 @@ Class {
 AWSLambdaRuntimeApiClient >> createHttpClient [
 
 	^ ZnClient new
+		loggingOff;
 		systemPolicy;
 		accept: ZnMimeType applicationJson;
 		enforceHttpSuccess: true;
