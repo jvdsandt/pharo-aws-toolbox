@@ -78,6 +78,11 @@ AWSLambdaCommandLineHandler >> doProcessingTask [
 	| nextResponse context |
 	
 	nextResponse := runtimeApiClient getNext.
+	
+	"Propagate the tracing header"
+	nextResponse headers at: 'Lambda-Runtime-Trace-Id'
+		ifPresent: [ :v | OSEnvironment current at: '_X_AMZN_TRACE_ID' put: v ].
+
 	lambdaEnvironment incInvocationCount.
 	handler setContext: (context := self createContext: nextResponse).
 

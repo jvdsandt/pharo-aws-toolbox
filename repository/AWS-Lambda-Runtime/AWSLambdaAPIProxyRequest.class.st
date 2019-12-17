@@ -27,6 +27,16 @@ AWSLambdaAPIProxyRequest >> body [
 ]
 
 { #category : #accessing }
+AWSLambdaAPIProxyRequest >> bodyDecoded [
+	^ self isBase64Encoded 
+			ifTrue: [
+				| bytes |
+				bytes := ZnBase64Encoder new decode: self body.
+				ZnUTF8Encoder new decodeBytes: bytes ]
+			ifFalse: [ body ]
+]
+
+{ #category : #accessing }
 AWSLambdaAPIProxyRequest >> headers [
 	^ headers
 ]
