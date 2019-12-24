@@ -68,8 +68,10 @@ AWSLambdaCommandLineHandler >> doInitializationTasks [
 	handler := handlerClass new.
 	
 	logStream
-		addEventMessage: DateAndTime now asString, ' Handler ', handlerClass name, ' ready!';
-		flush
+		addEventMessage: 'Handler ', handlerClass name, ' ready!';
+		flush.
+		
+	self stdout nextPutAll: 'Initialization finished.'; lf.
 ]
 
 { #category : #internal }
@@ -95,8 +97,11 @@ AWSLambdaCommandLineHandler >> doProcessingTask [
 		resultEntity := (ZnStringEntity type: self responseMimeType)
 			string: result;
 			yourself.
-		runtimeApiClient postInvocationResponse: resultEntity requestId: context requestId
+		runtimeApiClient postInvocationResponse: resultEntity requestId: context requestId.
+		self stdout nextPutAll: 'Task completed.'; lf.
 	] on: Error do: [ :ex |
+		self stdout nextPutAll: 'Task error:'; lf.
+		self printStacktraceFor: ex on: self stdout.
 		self handleInvocationError: ex data: nextResponse contents context: context.
 		ex return ].
 
@@ -127,22 +132,22 @@ AWSLambdaCommandLineHandler >> handleInitializationError: anException [
 { #category : #internal }
 AWSLambdaCommandLineHandler >> handleInvocationError: error data: data context: aContext [
 
-		| result resultEntity |
+	| result resultEntity |
 
-		lambdaEnvironment incInvocationErrorCount.
-		result := AWSLambdaError type: error class name message: error description.
-		resultEntity := (ZnStringEntity type: self responseMimeType)
-			string: result asJsonString;
-			yourself.
+	lambdaEnvironment incInvocationErrorCount.
+	result := AWSLambdaError type: error class name message: error description.
+	resultEntity := (ZnStringEntity type: self responseMimeType)
+		string: result asJsonString;
+		yourself.
 
-		[ self logStream addEventMessage: (String streamContents: [ :s |
-			s
-				nextPutAll: 'Error: '; nextPutAll: error description asString; lf;
-				nextPutAll: 'Request: '; nextPutAll: data asString; lf; lf.
-			self printStacktraceFor: error on: s ]).
+	[ self logStream addEventMessage: (String streamContents: [ :s |
+		s
+			nextPutAll: 'Error: '; nextPutAll: error description asString; lf;
+			nextPutAll: 'Request: '; nextPutAll: data asString; lf; lf.
+		self printStacktraceFor: error on: s ]).
 		self logStream flush ] on: Error do: [ :ex | ex return ].
 			
-		runtimeApiClient postInvocationError: resultEntity requestId: aContext requestId
+	runtimeApiClient postInvocationError: resultEntity requestId: aContext requestId
 ]
 
 { #category : #internal }
@@ -212,5 +217,5 @@ AWSLambdaCommandLineHandler >> responseMimeType [
 { #category : #resources }
 AWSLambdaCommandLineHandler >> startupMessage [
 
-	^ DateAndTime now asString, ' ', self class name, ' - ', SystemVersion current imageVersionString
+	^ self class name, ' - ', SystemVersion current imageVersionString
 ]

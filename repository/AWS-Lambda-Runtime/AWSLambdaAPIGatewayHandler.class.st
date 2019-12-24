@@ -22,7 +22,7 @@ AWSLambdaAPIGatewayHandler >> handleRequest: eventData [
 
 	| request response |
 	
-	self logStream addEventMessage: 'REQUEST: ', eventData.
+	self logRequest: eventData.
 	request := AWSLambdaAPIProxyRequest fromJsonString: eventData.
 	response := self handleAPIRequest: request.
 	(response isKindOf: AWSLambdaAPIProxyResponse)
@@ -31,6 +31,18 @@ AWSLambdaAPIGatewayHandler >> handleRequest: eventData [
 				statusCode: 200;
 				bodyJson: response;
 				yourself ].
-	self logStream addEventMessage: 'RESPONSE: ', response body asString.
+	self logResponse: response.
 	^ response
+]
+
+{ #category : #invoking }
+AWSLambdaAPIGatewayHandler >> logRequest: eventData [
+
+	self logStream addEventMessage: 'REQUEST: ', eventData
+]
+
+{ #category : #invoking }
+AWSLambdaAPIGatewayHandler >> logResponse: apiProxyResponse [
+
+	self logStream addEventMessage: 'RESPONSE: ', apiProxyResponse body asString
 ]
