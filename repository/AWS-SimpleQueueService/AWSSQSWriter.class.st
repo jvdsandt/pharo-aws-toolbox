@@ -1,3 +1,10 @@
+"
+I am AWSSQSWriter, use me when you want to send messages to a SQS queue. 
+
+If you only care about the body of a message use the #writeBody: method. If you want
+to set (system) attributes you can use the writeMessage: method with a AWSSQSSendMessageRequest
+instance as parameter.
+"
 Class {
 	#name : #AWSSQSWriter,
 	#superclass : #Object,

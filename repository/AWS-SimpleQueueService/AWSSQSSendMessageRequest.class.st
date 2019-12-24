@@ -91,6 +91,8 @@ AWSSQSSendMessageRequest >> delaySeconds [
 ]
 
 { #category : #accessing }
-AWSSQSSendMessageRequest >> delaySeconds: anObject [
-	delaySeconds := anObject
+AWSSQSSendMessageRequest >> delaySeconds: anInteger [
+	"Set the number of seconds to postpone the delivery of new messages. Default is zero."
+
+	delaySeconds := anInteger 
 ]

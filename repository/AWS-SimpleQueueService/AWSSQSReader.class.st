@@ -1,3 +1,11 @@
+"
+I am AWSSQSReader, use me when you want to read messages from a SQS queue. 
+
+After reading a message with #nextMessage it should be deleted using #deleteMessage. This should be done before the #visibilityTimeout or the message will be re-delivered. 
+
+You can use the #processNextWith: method to read a message, process it using a block and delete 
+the message after processing.
+"
 Class {
 	#name : #AWSSQSReader,
 	#superclass : #Object,
