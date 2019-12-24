@@ -23,15 +23,21 @@ AWSLogs >> execute: awsLogsRequest [
 	httpRequest := awsLogsRequest asHttpRequest: self endpoint.
 	self signRequest: httpRequest.
 	
-	response := self httpClient 
-		request: httpRequest;
-		execute;
-		response.
-		
+	response := self executeHttpRequest: httpRequest.
 	response isSuccess 
 		ifFalse: [ self handleErrorResponse: response ].
 		
 	^ awsLogsRequest resultClass fromHttpResponse: response
+]
+
+{ #category : #running }
+AWSLogs >> executeHttpRequest: httpRequest [
+
+	^ [ self httpClient request: httpRequest; execute; response ]
+			on: Error do: [ :sig |
+				"Close connection and retry"
+				self httpClient close.
+				self httpClient request: httpRequest; execute; response ]
 ]
 
 { #category : #running }
