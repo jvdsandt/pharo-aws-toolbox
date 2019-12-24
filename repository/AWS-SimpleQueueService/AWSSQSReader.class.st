@@ -1,6 +1,6 @@
 Class {
 	#name : #AWSSQSReader,
-	#superclass : #AWSService,
+	#superclass : #Object,
 	#instVars : [
 		'sqsservice',
 		'queueUrl',

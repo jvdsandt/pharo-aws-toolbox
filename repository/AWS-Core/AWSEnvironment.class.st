@@ -34,7 +34,7 @@ AWSEnvironment class >> getCredentialsFromEnvironment [
 	secretKey := env at: 'AWS_SECRET_KEY' ifAbsent: [ nil ].
 	(accessKeyId isEmptyOrNil or: [ secretKey isEmptyOrNil ])
 		ifTrue: [ ^ nil ].
-	sessionToken := env getEnv: 'AWS_SESSION_TOKEN'.
+	sessionToken := env at: 'AWS_SESSION_TOKEN' ifAbsent: [ nil ].
 	^ AWSCredentials
 		accessKeyId: accessKeyId
 		secretKey: secretKey

@@ -1,6 +1,6 @@
 Class {
 	#name : #AWSSQSWriter,
-	#superclass : #AWSService,
+	#superclass : #Object,
 	#instVars : [
 		'sqsservice',
 		'queueUrl',
