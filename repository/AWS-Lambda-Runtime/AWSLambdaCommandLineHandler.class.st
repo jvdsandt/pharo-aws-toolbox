@@ -71,7 +71,7 @@ AWSLambdaCommandLineHandler >> doInitializationTasks [
 		addEventMessage: 'Handler ', handlerClass name, ' ready!';
 		flush.
 		
-	self stdout nextPutAll: 'Initialization finished.'; lf.
+	self logStdout: [ :s | s nextPutAll: 'Initialization finished.' ]
 ]
 
 { #category : #internal }
@@ -98,14 +98,18 @@ AWSLambdaCommandLineHandler >> doProcessingTask [
 			string: result;
 			yourself.
 		runtimeApiClient postInvocationResponse: resultEntity requestId: context requestId.
-		self stdout nextPutAll: 'Task completed.'; lf.
+		self logStdout: [ :s | s nextPutAll: 'Task completed.' ].
 	] on: Error do: [ :ex |
-		self stdout nextPutAll: 'Task error:'; lf.
-		self printStacktraceFor: ex on: self stdout.
+		self logStdout: [ :s | 
+			s 
+				nextPutAll: 'Task error: ';
+				nextPutAll: ex class name; nextPutAll: ' - ';
+				nextPutAll: ex messageText; lf.
+			self printStacktraceFor: ex on: s ].
 		self handleInvocationError: ex data: nextResponse contents context: context.
 		ex return ].
 
-	handler cleanupAfterRequest.
+	handler cleanupAfterRequest
 ]
 
 { #category : #internal }
@@ -189,6 +193,15 @@ AWSLambdaCommandLineHandler >> jsonWriter [
 { #category : #accessing }
 AWSLambdaCommandLineHandler >> lambdaEnvironment [
 	^ lambdaEnvironment
+]
+
+{ #category : #internal }
+AWSLambdaCommandLineHandler >> logStdout: aBlock [
+
+	self stdout nextPutAll: (
+		String streamContents: [ :s |
+			aBlock value: s.
+			s lf ])
 ]
 
 { #category : #accessing }
