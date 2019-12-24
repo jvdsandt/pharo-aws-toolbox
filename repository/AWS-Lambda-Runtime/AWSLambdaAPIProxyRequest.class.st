@@ -51,6 +51,18 @@ AWSLambdaAPIProxyRequest >> isBase64Encoded [
 	^ isBase64Encoded
 ]
 
+{ #category : #testing }
+AWSLambdaAPIProxyRequest >> isHttpGetMethod [
+
+	^ self httpMethod = 'GET'
+]
+
+{ #category : #testing }
+AWSLambdaAPIProxyRequest >> isHttpPostMethod [
+
+	^ self httpMethod = 'POST'
+]
+
 { #category : #accessing }
 AWSLambdaAPIProxyRequest >> multiValueHeaders [
 	^ multiValueHeaders

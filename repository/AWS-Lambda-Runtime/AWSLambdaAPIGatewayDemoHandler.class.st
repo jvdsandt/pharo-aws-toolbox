@@ -44,10 +44,10 @@ AWSLambdaAPIGatewayDemoHandler >> handleNotFound: aMessage [
 { #category : #operations }
 AWSLambdaAPIGatewayDemoHandler >> showAbout: apiRequest [
 			
-	^ SmallDictionary new
-			at: #description put: 'About ', self class name;
-			at: #image put: SystemVersion current imageVersionString;
-			at: #systemInfo put: self systemInfoDictionary;
+	^ OrderedDictionary new
+			at: 'description' put: 'About ', self class name;
+			at: 'image' put: SystemVersion current imageVersionString;
+			at: 'systemInfo' put: self systemInfoDictionary;
 			yourself
 ]
 
