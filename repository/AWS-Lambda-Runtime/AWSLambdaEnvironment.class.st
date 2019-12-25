@@ -15,7 +15,8 @@ Class {
 		'sessionToken',
 		'accessKeyId',
 		'lambdaLogGroupName',
-		'lambdaLogStreamName'
+		'lambdaLogStreamName',
+		'pharoLog'
 	],
 	#category : #'AWS-Lambda-Runtime'
 }
@@ -102,6 +103,12 @@ AWSLambdaEnvironment >> invocationErrorCount [
 	^ invocationErrorCount
 ]
 
+{ #category : #testing }
+AWSLambdaEnvironment >> isLogOn: aCategory [
+
+	^ self pharoLog anySatisfy: [ :e | e sameAs: aCategory ]
+]
+
 { #category : #accessing }
 AWSLambdaEnvironment >> lambdaFunctionMemorySize [
 	^ lambdaFunctionMemorySize ifNil: [ lambdaFunctionMemorySize := self getEnv: 'AWS_LAMBDA_FUNCTION_MEMORY_SIZE' ]
@@ -132,6 +139,16 @@ AWSLambdaEnvironment >> lambdaLogStreamName [
 { #category : #accessing }
 AWSLambdaEnvironment >> lambdaRuntimeApi [
 	^ lambdaRuntimeApi ifNil: [ lambdaRuntimeApi := self getEnv: 'AWS_LAMBDA_RUNTIME_API' ]
+]
+
+{ #category : #accessing }
+AWSLambdaEnvironment >> pharoLog [
+	"Answer a collection of things that should be logged."
+
+	^ pharoLog ifNil: [ 
+			| input |
+			input := (self getEnv: 'PHARO_LOG') ifNil: [ '' ].
+			pharoLog := (input substrings: ',') collect: #trimmed ]
 ]
 
 { #category : #accessing }

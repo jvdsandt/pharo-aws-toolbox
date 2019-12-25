@@ -4,7 +4,7 @@ Class {
 	#category : #'AWS-Lambda-Runtime-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #resources }
 AWSLambdaAPIProxyRequestTest >> sampleRequest [
 
 	^ '{

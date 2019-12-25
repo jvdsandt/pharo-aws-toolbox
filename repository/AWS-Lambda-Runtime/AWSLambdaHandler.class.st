@@ -29,6 +29,18 @@ AWSLambdaHandler >> handleRequest: eventData [
 	^self systemInfoDictionary
 ]
 
+{ #category : #testing }
+AWSLambdaHandler >> isLogRequestOn [
+
+	^ self environment isLogOn: 'request'
+]
+
+{ #category : #testing }
+AWSLambdaHandler >> isLogResponseOn [
+
+	^ self environment isLogOn: 'response'
+]
+
 { #category : #accessing }
 AWSLambdaHandler >> logStream [
 	^ self context logStream

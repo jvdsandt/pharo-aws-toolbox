@@ -31,6 +31,17 @@ AWSService >> awsCredentials [
 	^ awsCredentials
 ]
 
+{ #category : #initialization }
+AWSService >> createHttpClient [
+
+	^ ZnClient new
+			loggingOff;
+			systemPolicy;
+			enforceHttpSuccess: false;
+			enforceAcceptContentType: false;
+			yourself
+]
+
 { #category : #accessing }
 AWSService >> endpoint [
 	^ endpoint
@@ -59,13 +70,7 @@ AWSService >> handleErrorResponse: httpResponse [
 { #category : #accessing }
 AWSService >> httpClient [
 
-	^ httpClient ifNil: [ 
-			httpClient := ZnClient new
-				loggingOff;
-				systemPolicy;
-				enforceHttpSuccess: false;
-				enforceAcceptContentType: false;
-				yourself ]
+	^ httpClient ifNil: [ httpClient := self createHttpClient ]
 ]
 
 { #category : #initialization }

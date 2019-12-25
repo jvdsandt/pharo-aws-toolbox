@@ -15,6 +15,14 @@ Class {
 	#category : #'AWS-CloudWatch-Logs-Core'
 }
 
+{ #category : #initialization }
+AWSLogs >> createHttpClient [ 
+
+	^ super createHttpClient 
+			beOneShot;
+			yourself
+]
+
 { #category : #running }
 AWSLogs >> execute: awsLogsRequest [
 
@@ -33,11 +41,10 @@ AWSLogs >> execute: awsLogsRequest [
 { #category : #running }
 AWSLogs >> executeHttpRequest: httpRequest [
 
-	^ [ self httpClient request: httpRequest; execute; response ]
-			on: Error do: [ :sig |
-				"Close connection and retry"
-				self httpClient close.
-				self httpClient request: httpRequest; execute; response ]
+	^ self httpClient 
+			request: httpRequest; 
+			execute; 
+			response
 ]
 
 { #category : #running }

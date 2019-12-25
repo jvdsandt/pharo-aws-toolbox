@@ -38,11 +38,13 @@ AWSLambdaAPIGatewayHandler >> handleRequest: eventData [
 { #category : #invoking }
 AWSLambdaAPIGatewayHandler >> logRequest: eventData [
 
-	self logStream addEventMessage: 'REQUEST: ', eventData
+	self isLogRequestOn 
+		ifTrue: [ self logStream addEventMessage: 'REQUEST: ', eventData ]
 ]
 
 { #category : #invoking }
 AWSLambdaAPIGatewayHandler >> logResponse: apiProxyResponse [
 
-	self logStream addEventMessage: 'RESPONSE: ', apiProxyResponse body asString
+	self isLogResponseOn 
+		ifTrue: [ self logStream addEventMessage: 'RESPONSE: ', apiProxyResponse body asString ]
 ]

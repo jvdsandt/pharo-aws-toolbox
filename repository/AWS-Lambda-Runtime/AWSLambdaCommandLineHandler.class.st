@@ -69,9 +69,7 @@ AWSLambdaCommandLineHandler >> doInitializationTasks [
 	
 	logStream
 		addEventMessage: 'Handler ', handlerClass name, ' ready!';
-		flush.
-		
-	self logStdout: [ :s | s nextPutAll: 'Initialization finished.' ]
+		flush
 ]
 
 { #category : #internal }
@@ -97,15 +95,8 @@ AWSLambdaCommandLineHandler >> doProcessingTask [
 		resultEntity := (ZnStringEntity type: self responseMimeType)
 			string: result;
 			yourself.
-		runtimeApiClient postInvocationResponse: resultEntity requestId: context requestId.
-		self logStdout: [ :s | s nextPutAll: 'Task completed.' ].
+		runtimeApiClient postInvocationResponse: resultEntity requestId: context requestId
 	] on: Error do: [ :ex |
-		self logStdout: [ :s | 
-			s 
-				nextPutAll: 'Task error: ';
-				nextPutAll: ex class name; nextPutAll: ' - ';
-				nextPutAll: ex messageText; lf.
-			self printStacktraceFor: ex on: s ].
 		self handleInvocationError: ex data: nextResponse contents context: context.
 		ex return ].
 
