@@ -26,9 +26,9 @@ BaselineOfAWSToolbox >> baseline: spec [
 				package: 'AWS-Core' with: [ spec requires: #( 'NeoJSON' ) ];
 				package: 'AWS-Core-Tests' with: [ spec requires: #( 'AWS-Core' ) ];
 				package: 'AWS-CloudWatch-Logs' with: [ spec requires: #( 'AWS-Core' ) ];
-				package: 'AWS-CloudWatch-Logs-Tests' with: [ spec requires: #( 'AWS-CloudWatch-Logs' ) ];
+				package: 'AWS-CloudWatch-Logs-Tests' with: [ spec requires: #( 'AWS-Core-Tests' 'AWS-CloudWatch-Logs' ) ];
 				package: 'AWS-Lambda-Runtime' with: [ spec requires: #( 'AWS-CloudWatch-Logs' ) ];
-				package: 'AWS-Lambda-Runtime-Tests' with: [ spec requires: #( 'AWS-Lambda-Runtime' ) ].
+				package: 'AWS-Lambda-Runtime-Tests' with: [ spec requires: #( 'AWS-Core-Tests' 'AWS-Lambda-Runtime' ) ].
 				
 			spec 
 				package: 'AWS-SimpleStorageService' with: [ spec requires: #( 'AWS-Core' 'XMLParser' ) ];
@@ -40,6 +40,6 @@ BaselineOfAWSToolbox >> baseline: spec [
 
 			spec 
 				group: 'Core' with: #( 'AWS-Lambda-Runtime' 'AWS-SimpleStorageService' 'AWS-SimpleQueueService' );
-				group: 'Tests' with: #( 'AWS-Lambda-Runtime-Tests' 'AWS-SimpleStorageService-Tests' 'AWS-SimpleQueueService-Tests' );
+				group: 'Tests' with: #( 'AWS-Lambda-Runtime-Tests' 'AWS-CloudWatch-Logs-Tests' 'AWS-SimpleStorageService-Tests' 'AWS-SimpleQueueService-Tests' );
 				group: 'default' with: #( 'Core' 'Tests' ) ] 
 ]
