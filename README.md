@@ -7,7 +7,7 @@ This project contains packages to interact with various Amazon Web Services. Cur
 - Build Lambda functions using Pharo Smalltalk
 - Writing log events to the CloudWatch Logs service
 - Access to the Amazon Simple Storage Service (S3) - only a part of api is implemented yet
-- [Access to the Amazon Simple Queueing Service](doc/using-sqs.md) (SQS)
+- [Access to the Amazon Simple Queue Service](doc/using-sqs.md) (SQS)
 
 ## Pharo Lambda Runtime
 

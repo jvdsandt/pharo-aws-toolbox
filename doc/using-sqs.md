@@ -1,8 +1,8 @@
-# Using the AWS Simple Queueing Service from Smalltalk
+# Using the AWS Simple Queue Service from Smalltalk
 
 ### Directly using the SQS API
-The class AWSSQService gives access to the most important SQS API calls. For most API calls need 
-a subclass of AWSSQSRequest that holds all the request parameters of the API call. The api methods 
+The class AWSSQService gives access to the most important SQS API calls. Most API calls take 
+a subclass of AWSSQSRequest as an argument. This request object holds all the request parameters of the API call. The api methods 
 return a sublass of AWSSQSResponse. These response objects wrap the xml document of the API response 
 and provide accessors for the relevant fields.
 
@@ -10,8 +10,7 @@ The best source of information about the SQS API calls are the
 [AWS documentation web pages](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_Operations.html). 
 
 ```smalltalk
-"
-	Setup the credentials and region using environment variables or the aws default profile.
+"   Setup the credentials and region using environment variables or the aws default profile.
 	Alternatively you can create them directly:
 		creds := AWSCredentials accessKeyId: '<my-access-key' secretKey: '<my-secret-key>'.
 		regions := 'eu-west-1'.
@@ -19,7 +18,7 @@ The best source of information about the SQS API calls are the
 creds := AWSEnvironment defaultCredentials.
 region := AWSEnvironment defaultRegionName.
 
-"Get access to the SQS service by crearing an AWSSQService instance using our credentials and a region"
+"Get access to the SQS service by creating an AWSSQService instance using our credentials and a region"
 sqs := AWSSQService newWithCredentials: creds region: region.
 
 "Create a new queue"
@@ -59,7 +58,7 @@ AWSSQSWriter and AWSSQSReader classes. They provide a more high-level way of usi
 creds := AWSEnvironment defaultCredentials.
 region := AWSEnvironment defaultRegionName.
 
-"Get access to the SQS service by crearing an AWSSQService instance using our credentials and a region"
+"Get access to the SQS service by creating an AWSSQService instance using our credentials and a region"
 sqs := AWSSQService newWithCredentials: creds region: region.
 
 "Create the writer"
