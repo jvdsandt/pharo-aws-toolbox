@@ -21,7 +21,7 @@ AWSSQSRequest class >> convertEntity: aFormUrlEncodedEntity [
 { #category : #internal }
 AWSSQSRequest class >> createEntityForAction: actionName [
 
-	^ self class convertEntity: (
+	^ self convertEntity: (
 		ZnApplicationFormUrlEncodedEntity new
 			at: 'Action' put: actionName;
 			at: 'Version' put: self version;

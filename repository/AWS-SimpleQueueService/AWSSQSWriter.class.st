@@ -17,6 +17,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+AWSSQSWriter class >> service: aSqsService queue: qName [
+
+	| queueUrl |
+
+	queueUrl := aSqsService getQueueUrlNamed: qName.
+	^ self new initWithService: aSqsService queueUrl: queueUrl
+]
+
+{ #category : #'instance creation' }
 AWSSQSWriter class >> service: aSqsService queueUrl: aQueueUrl [
 
 	^ self new initWithService: aSqsService queueUrl: aQueueUrl

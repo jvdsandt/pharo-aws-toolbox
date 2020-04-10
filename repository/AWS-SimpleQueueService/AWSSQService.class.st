@@ -17,7 +17,6 @@ AWSSQService >> createQueue: aCreateQueueRequest [
 		request: httpRequest;
 		execute;
 		response.
-		
 	response isSuccess 
 		ifFalse: [ self handleErrorResponse: response ].
 		
@@ -63,9 +62,10 @@ AWSSQService >> deleteQueue: aQueueUrl [
 		request: httpRequest;
 		execute;
 		response.
-		
 	response isSuccess 
 		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ AWSSQSResponse fromXmlString: response contents
 ]
 
 { #category : #api }
@@ -126,6 +126,19 @@ AWSSQService >> getQueueUrl: queueName ifAbsent: absentBlock [
 	^ (xmlDoc root elementAt: 'GetQueueUrlResult') contentStringAt: 'QueueUrl'
 ]
 
+{ #category : #convenience }
+AWSSQService >> getQueueUrlNamed: qName [
+	"Look for an existing queue named <qName> or create a new one.
+	Answer the queue url."
+	
+	^ self getQueueUrl: qName ifAbsent: [ 
+			| response |
+			response := self createQueue: (AWSSQSCreateQueueRequest new
+					queueName: qName;
+					yourself).
+			response queueUrl ]
+]
+
 { #category : #internal }
 AWSSQService >> handleErrorResponse: httpResponse [
 
@@ -181,16 +194,17 @@ AWSSQService >> purgeQueue: aQueueUrl [
 	| httpRequest response |
 
 	httpRequest := ZnRequest post: aQueueUrl.
-	httpRequest entity: (AWSSQSRequest createEntityForAction: 'DeleteQueue').
+	httpRequest entity: (AWSSQSRequest createEntityForAction: 'PurgeQueue').
 	self signRequest: httpRequest.
 	
 	response := self httpClient 
 		request: httpRequest;
 		execute;
 		response.
-		
 	response isSuccess 
 		ifFalse: [ self handleErrorResponse: response ].
+	
+	^ AWSSQSResponse fromXmlString: response contents
 ]
 
 { #category : #api }

@@ -20,6 +20,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+AWSSQSReader class >> service: aSqsService queue: qName [
+
+	| queueUrl |
+
+	queueUrl := aSqsService getQueueUrlNamed: qName.
+	^ self new initWithService: aSqsService queueUrl: queueUrl
+]
+
+{ #category : #'instance creation' }
 AWSSQSReader class >> service: aSqsService queueUrl: aQueueUrl [
 
 	^ self new initWithService: aSqsService queueUrl: aQueueUrl
@@ -89,13 +98,7 @@ AWSSQSReader >> newDefaultRequest [
 AWSSQSReader >> nextMessage [
 	"Answer the next message. Wait as long as neccesary until a message becomes available."
 
-	| request response |
-	
-	request := self newDefaultRequest.
-	[ 	
-		response := sqsservice receiveMessage: request on: self queueUrl.
-		response messages notEmpty ] whileFalse.
-	^ response messages first
+	^ (self nextMessages: 1) first
 ]
 
 { #category : #actions }
@@ -106,6 +109,7 @@ AWSSQSReader >> nextMessageIfNone: aBlock [
 	
 	request := self newDefaultRequest
 		waitTimeSeconds: 0;
+		maxNumberOfMessages: 1;
 		yourself.
 	response := sqsservice receiveMessage: request on: self queueUrl.
 	^ response messages notEmpty
@@ -115,26 +119,26 @@ AWSSQSReader >> nextMessageIfNone: aBlock [
 
 { #category : #actions }
 AWSSQSReader >> nextMessages [
-	"Answer the next messages. Wait as long as neccesary until at least one message becomes available."
+	"Answer the next at most 10 messages. Wait as long as neccesary 
+	until at least one message becomes available."
+
+	^ self nextMessages: 10
+]
+
+{ #category : #actions }
+AWSSQSReader >> nextMessages: maxCount [
+	"Answer the next at most <maxCount> messages. Wait as long as neccesary 
+	until at least one message becomes available."
 
 	| request response |
 	
 	request := self newDefaultRequest 
-		maxNumberOfMessages: 10;
+		maxNumberOfMessages: maxCount;
 		yourself.
 	[ 	
 		response := sqsservice receiveMessage: request on: self queueUrl.
 		response messages notEmpty ] whileFalse.
 	^ response messages
-]
-
-{ #category : #actions }
-AWSSQSReader >> processAllWith: aBlock [
-
-	[ 
-		self processNextWith: aBlock.
-		true 
-	 ]
 ]
 
 { #category : #actions }
