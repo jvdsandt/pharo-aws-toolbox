@@ -5,5 +5,16 @@ SmalltalkCISpec {
       #directory : 'repository',
       #platforms : [ #pharo ]
     }
-  ]
+  ],
+  #testing : {
+    // Skip the integration tests. They require aws credentials to work.
+    #exclude: {
+      #classes : [ 
+        #AWSS3ServiceIntegrationTest, 
+        #AWSSQSIntegrationTest, 
+        #AWSSQReaderWriterIntegrationTest, 
+        #AWSSQServiceIntegrationTest 
+      ]
+    }
+  }
 }
