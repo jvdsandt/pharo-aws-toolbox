@@ -7,7 +7,7 @@ This project contains packages to interact with various Amazon Web Services. Cur
 - Build Lambda functions using Pharo Smalltalk
 - Writing log events to the CloudWatch Logs service
 - Access to the Amazon Simple Storage Service (S3) - only a part of api is implemented yet
-- Access to the Amazon Simple Queueing Service (SQS)
+- [Access to the Amazon Simple Queueing Service](doc/using-sqs.md) (SQS)
 
 ## Pharo Lambda Runtime
 
@@ -37,7 +37,7 @@ Metacello new
 
 Pharo AWS Toolbox has the following dependencies:
 - [NeoJSON](https://github.com/svenvc/NeoJSON) - Used for reading and writing JSON data.
-- [XML-XMLParser](https://github.com/pharo-contributions/XML-XMLParser)
+- [XML-XMLParser](https://github.com/pharo-contributions/XML-XMLParser) - The SQS service uses XML for request and response messages.
 
 ## Working with AWS Credentials
 

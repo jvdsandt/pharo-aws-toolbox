@@ -14,10 +14,8 @@ AWSEnvironment class >> defaultCredentials [
 { #category : #accessing }
 AWSEnvironment class >> defaultCredentialsIfAbsent: aBlock [
 
-	^ aBlock value
-
-"	^ self getCredentialsFromEnvironment 
-			ifNil: [ self getCredentialsFromProfile: 'default' ifAbsent: aBlock ]"
+	^ self getCredentialsFromEnvironment 
+			ifNil: [ self getCredentialsFromProfile: 'default' ifAbsent: aBlock ]
 ]
 
 { #category : #accessing }
