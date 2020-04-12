@@ -1,8 +1,16 @@
 Class {
 	#name : #AWSDynamoRequest,
 	#superclass : #AWSJsonObject,
-	#category : #'AWS-DynamoDB'
+	#category : #'AWS-DynamoDB-Requests'
 }
+
+{ #category : #accessing }
+AWSDynamoRequest class >> neoJsonMapping: mapper [
+
+	mapper for: self do: [ :mapping |
+		self instVarNames do: [ :eachName |
+			mapping mapInstVar: eachName to: eachName capitalized ] ]
+]
 
 { #category : #converting }
 AWSDynamoRequest >> asHttpRequest: endpointUrl [

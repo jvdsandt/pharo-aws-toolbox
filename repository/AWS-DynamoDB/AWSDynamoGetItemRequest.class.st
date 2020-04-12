@@ -7,7 +7,7 @@ Class {
 		'projectionExpression',
 		'returnConsumedCapacity'
 	],
-	#category : #'AWS-DynamoDB'
+	#category : #'AWS-DynamoDB-Requests'
 }
 
 { #category : #accessing }
@@ -27,18 +27,6 @@ AWSDynamoGetItemRequest >> key: keyValueCollection [
 	keyValueCollection associationsDo: [ :each |
 		newDict at: each key put: each value asDynamoAttributeValue ].
 	self basicKey: newDict
-]
-
-{ #category : #'as yet unclassified' }
-AWSDynamoGetItemRequest >> neoJsonOn: neoJSONWriter [
-	neoJSONWriter writeMapStreamingDo: [ :jsonMapWriter |
-		jsonMapWriter 
-			writeKey: 'TableName' value: tableName;
-			writeKey: 'Key' value: key.
-		projectionExpression ifNotNil: [
-			jsonMapWriter writeKey: 'ProjectionExpression' value: projectionExpression ].
-		returnConsumedCapacity ifNotNil: [ 
-			jsonMapWriter writeKey: 'ReturnConsumedCapacity' value: returnConsumedCapacity ] ]
 ]
 
 { #category : #accessing }

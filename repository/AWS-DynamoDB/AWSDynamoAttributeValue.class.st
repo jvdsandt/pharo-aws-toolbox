@@ -5,7 +5,7 @@ Class {
 		'type',
 		'value'
 	],
-	#category : #'AWS-DynamoDB'
+	#category : #'AWS-DynamoDB-DataTypes'
 }
 
 { #category : #resources }
@@ -67,12 +67,12 @@ AWSDynamoAttributeValue >> initWithType: aTypeString value: aValueString [
 	value := aValueString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #iterating }
 AWSDynamoAttributeValue >> keysAndValuesDo: aBlock [
 	aBlock value: type value: value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 AWSDynamoAttributeValue >> neoJsonOn: neoJSONWriter [
 	neoJSONWriter writeMap: self
 ]

@@ -5,17 +5,8 @@ Class {
 		'consumedCapacity',
 		'item'
 	],
-	#category : #'AWS-DynamoDB'
+	#category : #'AWS-DynamoDB-Requests'
 }
-
-{ #category : #accessing }
-AWSDynamoGetItemResponse class >> neoJsonMapping: mapper [
-
-	mapper for: self do: [ :mapping |
-		mapping mapInstVar: #item to: 'Item'.
-		mapping mapInstVar: #consumedCapacity to: 'ConsumedCapacity' ].
-
-]
 
 { #category : #accessing }
 AWSDynamoGetItemResponse >> consumedCapacity [

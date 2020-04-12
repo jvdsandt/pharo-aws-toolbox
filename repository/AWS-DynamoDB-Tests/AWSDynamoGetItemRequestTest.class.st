@@ -36,7 +36,7 @@ AWSDynamoGetItemRequestTest >> testKeyAsAssociationArray [
 		yourself.
 	self 
 		jsonAssert: request
-		equals: '{"key":{"F2":{"S":"V2"},"F1":{"S":"V1"}},"tableName":"T1"}'
+		equals: '{"Key":{"F2":{"S":"V2"},"F1":{"S":"V1"}},"TableName":"T1"}'
 ]
 
 { #category : #tests }
@@ -55,7 +55,7 @@ AWSDynamoGetItemRequestTest >> testPrimitiveDataTypes [
 		yourself.
 	self 
 		jsonAssert: request
-		equals: '{"key":{"F1":{"S":"V1"},"F4":{"BOOL":true},"F2":{"N":"123"},"F5":{"NULL":true},"F3":{"N":"345.678"}},"tableName":"T1"}'
+		equals: '{"Key":{"F1":{"S":"V1"},"F4":{"BOOL":true},"F2":{"N":"123"},"F5":{"NULL":true},"F3":{"N":"345.678"}},"TableName":"T1"}'
 ]
 
 { #category : #tests }
@@ -71,5 +71,5 @@ AWSDynamoGetItemRequestTest >> testSimpleRequest [
 		yourself.
 	self 
 		jsonAssert: request
-		equals: '{"key":{"Subject":{"S":"How?"},"ForumName":{"S":"Amazon DynamoDB"}},"tableName":"Thread"}'
+		equals: '{"Key":{"Subject":{"S":"How?"},"ForumName":{"S":"Amazon DynamoDB"}},"TableName":"Thread"}'
 ]
