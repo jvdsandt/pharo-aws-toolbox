@@ -30,3 +30,10 @@ AWSJsonObject >> asJsonString [
 
 	^ NeoJSONWriter toString: self
 ]
+
+{ #category : #accessing }
+AWSJsonObject >> resultClass [
+	"Answer the class that wraps the result of executing this request.
+	Request subclasses with operations that return a meaningfull result should override this message."
+	^ AWSGenericResult
+]

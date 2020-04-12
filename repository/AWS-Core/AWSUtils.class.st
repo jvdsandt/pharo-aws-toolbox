@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #utilities }
+AWSUtils class >> awsJson10MimeType [
+
+	^ ZnMimeType main: 'application' sub: 'x-amz-json-1.0'
+]
+
+{ #category : #utilities }
 AWSUtils class >> awsJsonMimeType [
 
 	^ ZnMimeType main: 'application' sub: 'x-amz-json-1.1'
