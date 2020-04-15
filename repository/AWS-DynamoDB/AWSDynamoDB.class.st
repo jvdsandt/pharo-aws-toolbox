@@ -23,6 +23,24 @@ AWSDynamoDB >> createTable: aCreateTableRequest [
 ]
 
 { #category : #api }
+AWSDynamoDB >> deleteItem: aDeleteItemRequest [
+
+	| httpRequest response |
+
+	httpRequest := aDeleteItemRequest asHttpRequest: self endpoint.
+	self signRequest: httpRequest.
+	
+	response := self httpClient 
+		request: httpRequest;
+		execute;
+		response.
+	response isSuccess 
+		ifFalse: [ self handleErrorResponse: response ].
+		
+	^ AWSDynamoDeleteItemResponse fromJsonString: response contents
+]
+
+{ #category : #api }
 AWSDynamoDB >> getItem: aGetItemRequest [
 
 	| httpRequest response |

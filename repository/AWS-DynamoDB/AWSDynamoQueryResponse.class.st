@@ -12,6 +12,19 @@ Class {
 }
 
 { #category : #accessing }
+AWSDynamoQueryResponse class >> neoJsonMapping: mapper [
+
+	mapper for: self do: [ :mapping |
+		self instVarNames do: [ :eachName |
+			mapping mapInstVar: eachName to: eachName capitalized ].
+		(mapping mapInstVar: #items to: 'Items') valueSchema: #ArrayOfAWSDynamoItem.
+		(mapping mapInstVar: #lastEvaluatedKey to: 'LastEvaluatedKey') valueSchema: AWSDynamoItem ].
+	
+	mapper for: #ArrayOfAWSDynamoItem customDo: [ :mapping |
+		mapping listOfElementSchema: AWSDynamoItem ]
+]
+
+{ #category : #accessing }
 AWSDynamoQueryResponse >> consumedCapacity [
 	^ consumedCapacity
 ]

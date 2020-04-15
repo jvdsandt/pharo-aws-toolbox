@@ -4,14 +4,26 @@ Class {
 	#category : #'AWS-DynamoDB-Tests'
 }
 
-{ #category : #'as yet unclassified' }
-AWSDynamoGetItemRequestTest >> jsonAssert: object equals: expectedJsonString [
+{ #category : #tests }
+AWSDynamoGetItemRequestTest >> testBinaryDataType [
 
-	| jsonString |
+	| request |
 	
-	jsonString := object asJsonString.
-	self assert: (NeoJSONReader fromString: jsonString)
-		equals: (NeoJSONReader fromString: expectedJsonString)
+	request := AWSDynamoGetItemRequest new
+		tableName: 'T1';
+		key: (Array  
+			with: 'F1' -> 'V1'
+			with: 'F2' -> #[ 10 120 30 40 40 60 70 80 90 100 200 210 220 230 240 250 ]);
+		yourself.
+	self 
+		awsJsonAssert: request
+		equals: '{
+	"Key":{
+		"F1":{"S":"V1"},
+		"F2":{"B":"CngeKCg8RlBaZMjS3Obw+g=="}
+	},
+	"TableName":"T1"
+}'
 ]
 
 { #category : #tests }
@@ -21,6 +33,23 @@ AWSDynamoGetItemRequestTest >> testEmptyRequest [
 	
 	request := AWSDynamoGetItemRequest new.
 	self assert: '{}' equals: request asJsonString
+]
+
+{ #category : #tests }
+AWSDynamoGetItemRequestTest >> testHttpRequest [
+
+	| request httpRequest |
+	
+	request := AWSDynamoGetItemRequest new
+		tableName: 'T1';
+		addKeyEntry: 'A1' value: 'Amazon DynamoDB';
+		addKeyEntry: 'A2' value: 'Bla bla';
+		yourself.
+	httpRequest := request asHttpRequest: 'https://dynamodb.eu-west-1.amazonaws.com'.
+	
+	self assert: httpRequest method equals: 'POST'.
+	self assert: (httpRequest headers at: 'X-Amz-Target') equals: 'DynamoDB_20120810.GetItem'.
+	self assert: httpRequest contents equals: request asJsonString.
 ]
 
 { #category : #tests }
@@ -35,8 +64,8 @@ AWSDynamoGetItemRequestTest >> testKeyAsAssociationArray [
 			with: 'F2' -> 'V2');
 		yourself.
 	self 
-		jsonAssert: request
-		equals: '{"Key":{"F2":{"S":"V2"},"F1":{"S":"V1"}},"TableName":"T1"}'
+		awsJsonAssert: request
+		equals: '{"Key":{"F1":{"S":"V1"},"F2":{"S":"V2"}},"TableName":"T1"}'
 ]
 
 { #category : #tests }
@@ -54,7 +83,7 @@ AWSDynamoGetItemRequestTest >> testPrimitiveDataTypes [
 			with: 'F5' -> nil);
 		yourself.
 	self 
-		jsonAssert: request
+		awsJsonAssert: request
 		equals: '{"Key":{"F1":{"S":"V1"},"F4":{"BOOL":true},"F2":{"N":"123"},"F5":{"NULL":true},"F3":{"N":"345.678"}},"TableName":"T1"}'
 ]
 
@@ -70,6 +99,6 @@ AWSDynamoGetItemRequestTest >> testSimpleRequest [
 			with: 'Subject' -> 'How?');
 		yourself.
 	self 
-		jsonAssert: request
+		awsJsonAssert: request
 		equals: '{"Key":{"Subject":{"S":"How?"},"ForumName":{"S":"Amazon DynamoDB"}},"TableName":"Thread"}'
 ]

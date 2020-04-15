@@ -9,13 +9,8 @@ Class {
 }
 
 { #category : #adding }
-AWSDynamoPutItemRequest >> addEntry: attribName value: attribValue [
+AWSDynamoPutItemRequest >> addItemEntry: attribName value: attribValue [
 	self item at: attribName put: attribValue asDynamoAttributeValue
-]
-
-{ #category : #accessing }
-AWSDynamoPutItemRequest >> basicItem: keyValueCollection [
-	item := keyValueCollection
 ]
 
 { #category : #accessing }
@@ -25,11 +20,7 @@ AWSDynamoPutItemRequest >> item [
 
 { #category : #accessing }
 AWSDynamoPutItemRequest >> item: keyValueCollection [
-	| newDict |
-	newDict := Dictionary new.
-	keyValueCollection associationsDo: [ :each |
-		newDict at: each key put: each value asDynamoAttributeValue ].
-	self basicItem: newDict
+	item := keyValueCollection asDynamoAttributeValues
 ]
 
 { #category : #accessing }

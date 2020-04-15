@@ -10,23 +10,19 @@ Class {
 	#category : #'AWS-DynamoDB-Requests'
 }
 
-{ #category : #accessing }
-AWSDynamoGetItemRequest >> basicKey: aDictionary [
-	key := aDictionary
+{ #category : #adding }
+AWSDynamoGetItemRequest >> addKeyEntry: attribName value: attribValue [
+	self key at: attribName put: attribValue asDynamoAttributeValue
 ]
 
 { #category : #accessing }
 AWSDynamoGetItemRequest >> key [
-	^ key
+	^ key ifNil: [ key := Dictionary new ]
 ]
 
 { #category : #accessing }
 AWSDynamoGetItemRequest >> key: keyValueCollection [
-	| newDict |
-	newDict := Dictionary new.
-	keyValueCollection associationsDo: [ :each |
-		newDict at: each key put: each value asDynamoAttributeValue ].
-	self basicKey: newDict
+	key := keyValueCollection asDynamoAttributeValues
 ]
 
 { #category : #accessing }
@@ -51,8 +47,9 @@ AWSDynamoGetItemRequest >> returnConsumedCapacity [
 ]
 
 { #category : #accessing }
-AWSDynamoGetItemRequest >> returnConsumedCapacity: anObject [
-	returnConsumedCapacity := anObject
+AWSDynamoGetItemRequest >> returnConsumedCapacity: aString [
+	"INDEXES | TOTAL | NONE"
+	returnConsumedCapacity := aString
 ]
 
 { #category : #accessing }
