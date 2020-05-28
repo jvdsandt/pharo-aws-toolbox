@@ -21,7 +21,9 @@ AWSCredentials class >> accessKeyId: aKeyId secretKey: aSecretKey [
 { #category : #'instance creation' }
 AWSCredentials class >> accessKeyId: aKeyId secretKey: aSecretKey sessionToken: aToken [
 
-	^ self new setAccessKeyId: aKeyId trimmed secretKey: aSecretKey trimmed sessionToken: aToken
+	^ self new setAccessKeyId: aKeyId trimmed 
+			secretKey: aSecretKey trimmed 
+			sessionToken: aToken trimmed
 ]
 
 { #category : #accessing }
