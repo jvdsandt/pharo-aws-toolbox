@@ -76,7 +76,6 @@ AWSCredentials >> = other [
 
 { #category : #accessing }
 AWSCredentials >> accessKeyId [
-	self isExpirated ifTrue: [ self refresh ].
 	^ accessKeyId
 ]
 
@@ -93,7 +92,7 @@ AWSCredentials >> hash [
 ]
 
 { #category : #testing }
-AWSCredentials >> isExpirated [
+AWSCredentials >> isExpired [
 	^ self expirationTime notNil
 		and: [ self expirationTime < DateAndTime now ]
 ]
@@ -133,13 +132,11 @@ AWSCredentials >> refreshWith: awsCredentials [
 
 { #category : #accessing }
 AWSCredentials >> secretKey [
-	self isExpirated ifTrue: [ self refresh ].
 	^ secretKey
 ]
 
 { #category : #accessing }
 AWSCredentials >> sessionToken [
-	self isExpirated ifTrue: [ self refresh ].
 	^ sessionToken
 ]
 

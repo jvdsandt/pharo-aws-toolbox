@@ -37,6 +37,9 @@ AWSS3Service >> signRequest: httpRequest [
 
 	| params |
 
+	awsCredentials isExpired
+		ifTrue: [ awsCredentials := awsCredentials refresh ].
+
 	"This header will set to the correct value in the sign logic."
 	httpRequest headers at: AWSHeaders x_amz_content_sha256 put: 'required'.
 
