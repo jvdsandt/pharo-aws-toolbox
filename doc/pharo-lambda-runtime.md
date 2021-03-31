@@ -50,7 +50,7 @@ api is called to tell the Lambda runtime that something went wrong.
 [Next Invocation](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-next) api
 to get the next task to execute. The payload of this task is passed to the #handleRequest: method 
 of the handler class. If succesfull, the result is returned by calling the [Invocation Result](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-response)
-api. In case od an error the [Invocation Error](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-invokeerror)
+api. In case of an error the [Invocation Error](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-invokeerror)
 is called with details about the error.
 
 The Lambda runtime enviroment will keep the Smalltalk image running for an unspecified amount of time and
