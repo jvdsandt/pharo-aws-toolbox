@@ -1,6 +1,8 @@
 Class {
 	#name : #AWSS3Service,
 	#superclass : #AWSService,
+	#traits : 'AWSTXmlErrorResponseHandler',
+	#classTraits : 'AWSTXmlErrorResponseHandler classTrait',
 	#category : #'AWS-SimpleStorageService'
 }
 
@@ -18,18 +20,6 @@ AWSS3Service >> executeRequest: httpRequest [
 		ifFalse: [ self handleErrorResponse: response ].
 		
 	^ response
-]
-
-{ #category : #internal }
-AWSS3Service >> handleErrorResponse: httpResponse [
-
-	| dom |
-	
-	((ZnMimeType applicationXml matches: httpResponse contentType) and: [ httpResponse hasEntity ])
-		ifFalse: [ ^ super handleErrorResponse: httpResponse ].
-		
-	dom := self xmlParser parse: httpResponse contents.
-	(AWSError xmlData: dom root) signal
 ]
 
 { #category : #internal }
@@ -52,10 +42,4 @@ AWSS3Service >> signRequest: httpRequest [
 			region: self region.
 	
 	AWSSignerV4 new sign: httpRequest using: awsCredentials with: params
-]
-
-{ #category : #resources }
-AWSS3Service >> xmlParser [
-
-	^ XMLDOMParser
 ]

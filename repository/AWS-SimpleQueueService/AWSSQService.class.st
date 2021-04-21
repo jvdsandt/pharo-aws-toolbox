@@ -1,6 +1,8 @@
 Class {
 	#name : #AWSSQService,
 	#superclass : #AWSService,
+	#traits : 'AWSTXmlErrorResponseHandler',
+	#classTraits : 'AWSTXmlErrorResponseHandler classTrait',
 	#category : #'AWS-SimpleQueueService'
 }
 
@@ -139,18 +141,6 @@ AWSSQService >> getQueueUrlNamed: qName [
 			response queueUrl ]
 ]
 
-{ #category : #internal }
-AWSSQService >> handleErrorResponse: httpResponse [
-
-	| dom |
-	
-	(httpResponse hasEntity and: [ httpResponse contentType sub = 'xml' ])
-		ifFalse: [ ^ super handleErrorResponse: httpResponse ].
-		
-	dom := self xmlParser parse: httpResponse contents.
-	(AWSError xmlData: dom root) signal
-]
-
 { #category : #initialization }
 AWSSQService >> initEndpointWithRegion: aRegion [
 	endpoint := 'https://sqs.' , region asLowercase , '.amazonaws.com'
@@ -247,10 +237,4 @@ AWSSQService >> sendMessage: aSendMessageRequest on: aQueueUrl [
 		ifFalse: [ AWSError signal: 'Data error - hash mismatch' ].
 		
 	^ response
-]
-
-{ #category : #resources }
-AWSSQService >> xmlParser [
-
-	^ XMLDOMParser
 ]
