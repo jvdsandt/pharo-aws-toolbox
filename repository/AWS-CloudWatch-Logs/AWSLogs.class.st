@@ -54,8 +54,6 @@ AWSLogs >> getStream: streamName group: groupName [
 ]
 
 { #category : #initialization }
-AWSLogs >> initWithCredentials: aCredentials region: aRegion [
-
-	super initWithCredentials: aCredentials region: aRegion.
-	endpoint := 'https://logs.', region asLowercase, '.amazonaws.com'.
+AWSLogs >> initEndpointWithRegion: aRegion [
+	endpoint := 'https://logs.' , region asLowercase , '.amazonaws.com'
 ]

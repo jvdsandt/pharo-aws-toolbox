@@ -152,10 +152,8 @@ AWSSQService >> handleErrorResponse: httpResponse [
 ]
 
 { #category : #initialization }
-AWSSQService >> initWithCredentials: aCredentials region: aRegion [
-
-	super initWithCredentials: aCredentials region: aRegion.
-	endpoint := 'https://sqs.', region asLowercase, '.amazonaws.com'.
+AWSSQService >> initEndpointWithRegion: aRegion [
+	endpoint := 'https://sqs.' , region asLowercase , '.amazonaws.com'
 ]
 
 { #category : #api }

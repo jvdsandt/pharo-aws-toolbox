@@ -43,10 +43,8 @@ AWSSimpleStorageService >> head: bucketName [
 ]
 
 { #category : #initialization }
-AWSSimpleStorageService >> initWithCredentials: aCredentials region: aRegion [
-
-	super initWithCredentials: aCredentials region: aRegion.
-	endpoint := 'https://s3-', region asLowercase, '.amazonaws.com'.
+AWSSimpleStorageService >> initEndpointWithRegion: aRegion [
+	endpoint := 'https://s3-' , region asLowercase , '.amazonaws.com'
 ]
 
 { #category : #operations }
