@@ -74,10 +74,15 @@ AWSService >> httpClient [
 ]
 
 { #category : #initialization }
-AWSService >> initWithCredentials: aCredentials region: aRegion [
+AWSService >> initEndpointWithRegion: aRegion [
+	self subclassResponsibility
+]
 
+{ #category : #initialization }
+AWSService >> initWithCredentials: aCredentials region: aRegion [
 	awsCredentials := aCredentials.
 	region := aRegion.
+	self initEndpointWithRegion: aRegion
 ]
 
 { #category : #accessing }
