@@ -59,7 +59,7 @@ AWSEC2Service >> getRole [
 	
 	response := self executeRequest: request.
 		
-	response isError ifTrue: [ ^nil ].
+	response isSuccess ifFalse: [ ^nil ].
 	
 	^response contents
 ]
@@ -74,7 +74,7 @@ AWSEC2Service >> getSecurityToken [
 	
 	response := self httpClient request: request; execute; response.
 	
-	response isBadRequest ifTrue: [ ^nil ].
+	response isSuccess ifFalse: [ ^nil ].
 	
 	^response contents
 ]

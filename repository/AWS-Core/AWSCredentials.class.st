@@ -116,18 +116,9 @@ AWSCredentials >> provider: anAWSCredentialsProvider [
 
 { #category : #actions }
 AWSCredentials >> refresh [
-	self provider	
-		ifNotNil: [:prov | self refreshWith: prov getCredentials ]
-		ifNil: [ ^ self error: 'Not possible to refresh AWS Credentials.' ]
-]
-
-{ #category : #actions }
-AWSCredentials >> refreshWith: awsCredentials [
-	self
-		setAccessKeyId: awsCredentials accessKeyId
-		secretKey: awsCredentials secretKey
-		sessionToken: awsCredentials sessionToken
-		expirationTime: awsCredentials expirationTime
+	^ self provider	
+		ifNotNil: [:prov | prov getCredentials ]
+		ifNil: [ self error: 'Not possible to refresh AWS Credentials.' ]
 ]
 
 { #category : #accessing }
