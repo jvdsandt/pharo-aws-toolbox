@@ -8,14 +8,20 @@ Class {
 AWSEnvironment class >> defaultCredentials [
 	"self defaultCredentials"
 
-	^ self defaultCredentialsIfAbsent: [ self error: 'No AWS credentials present' ]
+	^ self defaultCredentialsIfAbsent: [ nil ]
 ]
 
 { #category : #accessing }
 AWSEnvironment class >> defaultCredentialsIfAbsent: aBlock [
 
-	^ self getCredentialsFromEnvironment 
-			ifNil: [ self getCredentialsFromProfile: 'default' ifAbsent: aBlock ]
+	"Try to get the accessKeyId ans secretKey from the default Credentials Providers in the standard AWS manner
+	See: https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html"
+	
+	^ self getCredentialsFromEnvironment
+		ifNil: [ self
+				getCredentialsFromProfile: 'default'
+				ifAbsent:
+					[ self getCredentialsFrom: #AWSEC2CredentialsProvider ifAbsent: aBlock ] ]
 ]
 
 { #category : #accessing }
@@ -27,23 +33,18 @@ AWSEnvironment class >> defaultRegionName [
 				ifAbsent: [ self error: 'No default AWS region present' ] ]
 ]
 
+{ #category : #accessing }
+AWSEnvironment class >> getCredentialsFrom: aClassSymbol ifAbsent: aBlock [
+	^ (self isProviderLoaded: aClassSymbol)
+		ifTrue: [ (self environment at: aClassSymbol) getCredentialsIfAbsent: [ aBlock value ] ]
+		ifFalse: [ aBlock value ]
+]
+
 { #category : #utilities }
 AWSEnvironment class >> getCredentialsFromEnvironment [
-	"Try to get AWS Credentials from OS environment variables. Answer nil if these
-	variables are not defined."
-
-	| env accessKeyId secretKey sessionToken |
-	env := OSEnvironment current.
-	accessKeyId := env at: 'AWS_ACCESS_KEY_ID'
-		ifAbsent: [ env at: 'AWS_ACCESS_KEY' ifAbsent: [ nil ]].
-	secretKey := env at: 'AWS_SECRET_KEY' ifAbsent: [ nil ].
-	(accessKeyId isEmptyOrNil or: [ secretKey isEmptyOrNil ])
-		ifTrue: [ ^ nil ].
-	sessionToken := env at: 'AWS_SESSION_TOKEN' ifAbsent: [ nil ].
-	^ AWSCredentials
-		accessKeyId: accessKeyId
-		secretKey: secretKey
-		sessionToken: sessionToken
+	^ self
+		getCredentialsFrom: #AWSEnvironmentCredentialsProvider
+		ifAbsent: [ nil ]
 ]
 
 { #category : #utilities }
@@ -53,7 +54,7 @@ AWSEnvironment class >> getCredentialsFromProfile: profileName ifAbsent: aBlock 
 	
 	"self getCredentialsFromProfile: 'default' ifAbsent: [ nil ]"
 	
-	| ref contents index propIndex accessKeyId secretKey |
+	| ref contents index propIndex accessKeyId secretKey sessionToken|
 	
 	ref := (FileLocator home / '.aws/credentials') resolve.
 	ref exists
@@ -73,7 +74,13 @@ AWSEnvironment class >> getCredentialsFromProfile: profileName ifAbsent: aBlock 
 		upTo: $=;
 		nextLine.
 		
-	^ AWSCredentials accessKeyId: accessKeyId secretKey: secretKey
+	propIndex := contents indexOfSubCollection: 'aws_session_token' startingAt: index ifAbsent: [ ^AWSCredentials accessKeyId: accessKeyId secretKey: secretKey ].
+	sessionToken := contents readStream
+		position: propIndex;
+		upTo: $=;
+		nextLine.
+		
+	^ AWSCredentials accessKeyId: accessKeyId secretKey: secretKey sessionToken: sessionToken
 ]
 
 { #category : #utilities }
@@ -110,4 +117,9 @@ AWSEnvironment class >> hasDefaultCredentials [
 
 	^[ self defaultCredentials notNil ]
 		on: Error do: [ :ex | ex return: false ]
+]
+
+{ #category : #accessing }
+AWSEnvironment class >> isProviderLoaded: aSymbol [
+	^ Smalltalk globals includesKey: aSymbol
 ]

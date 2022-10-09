@@ -6,12 +6,10 @@ Class {
 
 { #category : #internal }
 AWSSQSRequest class >> convertEntity: aFormUrlEncodedEntity [
-	"Workaround for issue: https://github.com/svenvc/zinc/issues/50"
-	
+
 	| bytes |
 	
-	bytes := (String streamContents: [ :s | aFormUrlEncodedEntity writeOn: s ]) utf8Encoded.
-	
+	bytes := aFormUrlEncodedEntity asByteArray.
 	^ (ZnByteArrayEntity type: ZnMimeType applicationFormUrlEncoded)
 			bytes: bytes;
 			contentLength: bytes size;

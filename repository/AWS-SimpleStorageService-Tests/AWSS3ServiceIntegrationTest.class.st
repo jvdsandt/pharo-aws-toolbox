@@ -9,8 +9,9 @@ Class {
 
 { #category : #accessing }
 AWSS3ServiceIntegrationTest class >> testBucketName [
-
-	^ TestBucketName ifNil: [ TestBucketName := 'pharo-aws-toolbox' ]
+	^ TestBucketName
+		ifNil: [ TestBucketName := 'pharo-aws-toolbox'
+				, AWSEnvironment defaultCredentials accessKeyId hash asString ]
 ]
 
 { #category : #accessing }

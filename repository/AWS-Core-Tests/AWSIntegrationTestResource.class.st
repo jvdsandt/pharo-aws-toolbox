@@ -11,7 +11,7 @@ Class {
 { #category : #accessing }
 AWSIntegrationTestResource class >> credentials [
 
-	^ Credentials ifNil: [ AWSEnvironment defaultCredentialsIfAbsent: [ nil ] ]
+	^ Credentials ifNil: [ AWSCredentials default]
 ]
 
 { #category : #accessing }

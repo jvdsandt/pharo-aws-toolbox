@@ -88,8 +88,11 @@ AWSService >> region [
 { #category : #internal }
 AWSService >> signRequest: httpRequest [
 
+	awsCredentials isExpired
+		ifTrue: [ awsCredentials := awsCredentials refresh ].
+
 	awsCredentials sessionToken notNil
 		ifTrue: [ httpRequest headers at: AWSHeaders x_amz_security_token put: awsCredentials sessionToken ].
-	
+		
 	AWSSignerV4 new sign: httpRequest using: awsCredentials
 ]
