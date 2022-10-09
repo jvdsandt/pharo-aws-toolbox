@@ -6,9 +6,11 @@ Class {
 
 { #category : #actions }
 AWSEC2CredentialsProvider class >> getCredentials [
-	| json |
-	json := AWSEC2Service new getCredentials.
-	^ (AWSCredentials fromJsonString: json)
-		provider: self;
-		yourself
+	| response |
+	response := AWSEC2Service new getCredentials.
+	^ response
+		ifNotNil: [ :json | 
+			(AWSCredentials fromJsonString: json)
+				provider: self;
+				yourself ]
 ]
